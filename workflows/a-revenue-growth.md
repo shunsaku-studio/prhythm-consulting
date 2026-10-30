@@ -4,6 +4,24 @@
 
 **難所:** 期限と定義で難易度が大きく変わる。シェア獲得に頼りすぎた計画になりやすい。打ち手を積むうちに資金の手当てを忘れる。
 
+## 考え方の流れ（例）
+
+お題を受けてから、頭の中で何をどの順に考えるか。各ステップで使うスキルを右に置いた。
+
+| # | 考えること | スキル |
+|---|-----------|--------|
+| 1 | 5 年で 2.5 倍は年 20% の成長だ。ふつうの会社の 5 年成長は平均 7% なので、上位 1 割の難しさになる | [target-math](../skills/target-math/README.md) |
+| 2 | 期限と定義を先に確かめる。社長は「2030 年代の早い時期」と言っている。M&A を含めてよいのか | [midterm-plan-reader](../skills/midterm-plan-reader/README.md)、[leadership-lens](../skills/leadership-lens/README.md) |
+| 3 | 市場並みに伸びるだけなら 2,540 億円。足りないのは約 2,460 億円だ | [market-sizing](../skills/market-sizing/README.md)、[gap-bridge](../skills/gap-bridge/README.md) |
+| 4 | 埋め方は、伸びる市場に寄せる・シェアを取る・新しい製品や市場に出る・買う、の 4 つしかない | [option-longlist](../skills/option-longlist/README.md) |
+| 5 | 過去の伸びを分けると、シェアで取れたのは年 1pt 未満。シェアだけで埋めるのは無理だ | [growth-decomposition](../skills/growth-decomposition/README.md)、[gap-bridge](../skills/gap-bridge/README.md) |
+| 6 | 伸びる市場はどこか。EV 熱マネジメントと半導体製造装置向けが年 9〜15% で伸びる | [pest](../skills/pest/README.md)、[market-sizing](../skills/market-sizing/README.md) |
+| 7 | そこで勝てるか。顧客は量産立ち上げの速さと設計段階からの提案で選ぶ。ここは競合より強い | [three-c](../skills/three-c/README.md)、[competitor-benchmark](../skills/competitor-benchmark/README.md)、[swot](../skills/swot/README.md) |
+| 8 | 打ち手ごとに、いつからいくら稼げるかを見積もる | [initiative-sizing](../skills/initiative-sizing/README.md) |
+| 9 | お金は足りるか。全部やると借入の上限を超えるので、買収を中規模に絞る | [capital-capacity](../skills/capital-capacity/README.md) |
+| 10 | それでも 1,200 億円ほど足りない。期限を 3 年延ばし、2 件目の買収を足す案を並べる | [target-math](../skills/target-math/README.md)、[storyline](../skills/storyline/README.md) |
+| 11 | 追う KPI は、受注額、受注残、買収の価格、ROIC。各ゲートで進むか止めるかを決める | [kpi-tree](../skills/kpi-tree/README.md)、[kpi-roadmap](../skills/kpi-roadmap/README.md) |
+
 ## ストーリーライン（レーン 1：中計に則る）
 
 | # | メッセージライン（例） | 根拠を出すスキル |
@@ -79,7 +97,3 @@
 3. 追う打ち手（資金が足りなければ打ち手に戻る）— 前に先輩質問タイム②
 4. ゲートと撤退基準
 5. どちらのレーンを前に出すか — 前に先輩質問タイム③
-
-## 進める順（2 週間）
-
-target-math → midterm-plan-reader / leadership-lens → issue-tree / workplan → company-financials → financial-analysis / growth-decomposition / competitor-benchmark → pest / market-sizing → gap-bridge → three-c / swot → option-longlist → initiative-sizing → option-evaluation → capital-capacity → kpi-tree / business-case-model / scenario-sensitivity → kpi-roadmap → storyline → number-audit

@@ -4,6 +4,19 @@
 
 **難所:** 株主還元のような着手しやすい策に流れやすい。東証の資料でも、事業ポートフォリオの見直しは企業の取組み（28%）と投資家の期待（73% が課題と見る）の差が最も大きい（東証、2026 年 4 月）。
 
+## 考え方の流れ（例）
+
+お題を受けてから、頭の中で何をどの順に考えるか。各ステップで使うスキルを右に置いた。
+
+| # | 考えること | スキル |
+|---|-----------|--------|
+| 1 | ROE は利益率 × 回転率 × レバレッジに分けられる。どれが低いのか | [financial-analysis](../skills/financial-analysis/README.md) |
+| 2 | 同業と比べると、低いのは利益率だ。還元でレバレッジを上げるだけなら、自己資本を 1,100 億円減らす必要がある | [competitor-benchmark](../skills/competitor-benchmark/README.md)、[target-math](../skills/target-math/README.md) |
+| 3 | 事業別に見ると、資本コストを下回る事業が 2 つある。資本が滞留している活動はどこか | [kpi-tree](../skills/kpi-tree/README.md)、[value-chain](../skills/value-chain/README.md) |
+| 4 | 打ち手は、事業（価格改定・撤退・成長投資）、資産（政策保有株の売却）、資本（自社株買い）の 3 面で考える | [option-longlist](../skills/option-longlist/README.md)、[swot](../skills/swot/README.md) |
+| 5 | 順番は、事業を直す → 資産を売る → 還元する。この順で 8% に届くかを数字で確かめる | [capital-capacity](../skills/capital-capacity/README.md)、[business-case-model](../skills/business-case-model/README.md) |
+| 6 | 追う KPI は、事業別の ROIC と資本コストの差 | [kpi-roadmap](../skills/kpi-roadmap/README.md) |
+
 ## ストーリーライン
 
 | # | メッセージライン（例） | 根拠を出すスキル |

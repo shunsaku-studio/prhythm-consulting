@@ -4,6 +4,21 @@
 
 **難所:** 市場の定義が曖昧なまま、一つの推定で規模を出しやすい。立ち上がりの遅さを見積もりに入れ忘れる。
 
+## 考え方の流れ（例）
+
+お題を受けてから、頭の中で何をどの順に考えるか。各ステップで使うスキルを右に置いた。
+
+| # | 考えること | スキル |
+|---|-----------|--------|
+| 1 | 出るか出ないかは、市場が十分大きいか、勝てるか、儲かるか、の 3 つで決まる | [issue-tree](../skills/issue-tree/README.md) |
+| 2 | 市場を動かしているのは何か。脱炭素の規制とエネルギー価格だ | [pest](../skills/pest/README.md) |
+| 3 | 市場は定義しだいで 1,000〜2,000 億円。狙える層だけなら約 300 億円 | [market-sizing](../skills/market-sizing/README.md) |
+| 4 | この業界は儲かるか。誰が強く、利益はどこに流れているか | [five-forces](../skills/five-forces/README.md) |
+| 5 | 勝てるか。顧客が選ぶ基準を並べると、既存の顧客基盤と保守網を活かせる | [three-c](../skills/three-c/README.md)、[competitor-benchmark](../skills/competitor-benchmark/README.md) |
+| 6 | 入り方は、自前・提携・買収の 3 つ。提携がいちばん早く、安い | [option-longlist](../skills/option-longlist/README.md)、[option-evaluation](../skills/option-evaluation/README.md) |
+| 7 | 立ち上がりの遅さを入れると、黒字化は 4 年目で、投資は 40 億円 | [initiative-sizing](../skills/initiative-sizing/README.md)、[business-case-model](../skills/business-case-model/README.md) |
+| 8 | どこで止めるか。1 年目の有償契約の数と、3 年目の継続売上で判断する | [scenario-sensitivity](../skills/scenario-sensitivity/README.md)、[kpi-roadmap](../skills/kpi-roadmap/README.md) |
+
 ## ストーリーライン
 
 | # | メッセージライン（例） | 根拠を出すスキル |

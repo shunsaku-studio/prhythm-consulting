@@ -4,6 +4,20 @@
 
 **難所:** 買える金額を確かめずに候補を探し始める。候補の魅力と自社の資本規律を切り離して議論する。
 
+## 考え方の流れ（例）
+
+お題を受けてから、頭の中で何をどの順に考えるか。各ステップで使うスキルを右に置いた。
+
+| # | 考えること | スキル |
+|---|-----------|--------|
+| 1 | オーガニックでは FY2030 に 600 億円足りない | [growth-decomposition](../skills/growth-decomposition/README.md)、[gap-bridge](../skills/gap-bridge/README.md) |
+| 2 | 候補を探す前に、買える上限を出す。手元資金、借入余力、売却資金で 1,200 億円 | [capital-capacity](../skills/capital-capacity/README.md) |
+| 3 | 手放す事業はどれか。ROIC が資本コストを下回る汎用樹脂事業だ | [financial-analysis](../skills/financial-analysis/README.md)、[value-chain](../skills/value-chain/README.md) |
+| 4 | 買う領域は、構造的に儲かる業界か | [five-forces](../skills/five-forces/README.md)、[competitor-benchmark](../skills/competitor-benchmark/README.md) |
+| 5 | 買うと何が良くなるか。調達と工場の統合で営業利益が 30 億円増える | [value-chain](../skills/value-chain/README.md)、[business-case-model](../skills/business-case-model/README.md) |
+| 6 | 価格の規律はどこか。売上の 1.6 倍を超えると、増分 ROIC が資本コストを下回る | [scenario-sensitivity](../skills/scenario-sensitivity/README.md) |
+| 7 | 1 件では 100 億円しか埋まらない。残り 500 億円をどうするかを経営会議に出す | [storyline](../skills/storyline/README.md) |
+
 ## ストーリーライン
 
 | # | メッセージライン（例） | 根拠を出すスキル |
