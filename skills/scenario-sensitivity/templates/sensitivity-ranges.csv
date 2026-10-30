@@ -1,0 +1,8 @@
+key,label,downside,upside,unit,in_scenario,source_tag,source
+base_growth,成り行きの売上成長率,—,—,%,yes,推定,業界見通しと改定の履歴（資料名・ページ、ID）
+base_margin,成り行き事業の営業利益率,—,—,%,yes,公開,自社の過去の実績と前中計の目標（資料名・ページ、ID）
+init_margin,施策売上の営業利益率,—,—,%,yes,推定,定義をそろえた競合の利益率（ID）
+ramp_delay,施策の立ち上がり（年のずれ）,—,—,年,yes,公開,自社の過去の立ち上がりの遅れ（資料名・ページ）
+init_scale,施策売上の実現率,—,—,倍,no,推定,シェア獲得のベースレートと自社の中計達成の実績（ID）
+init_go:I-xxx,M&A の実行,—,—,倍,yes,公開,過去の M&A の見送りと価格規律の発言（資料名・ページ）
+nwc_rate,運転資本の増加率,—,—,%,no,仮置き,—

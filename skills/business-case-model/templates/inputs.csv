@@ -1,0 +1,17 @@
+id,label,value,unit,source_tag,key
+F-xxx,基準年の連結売上高,—,億円,公開,base_revenue
+F-xxx,基準年の連結営業利益,—,億円,公開,base_op
+F-xxx,基準年末の純資産,—,億円,公開,base_equity
+F-xxx,基準年末の有利子負債,—,億円,公開,base_debt
+F-xxx,基準年末の現金及び預金,—,億円,公開,base_cash
+F-xxx,成り行きの売上成長率（年率）,—,%,推定,base_growth
+F-xxx,成り行き事業の営業利益率,—,%,推定,base_margin
+F-xxx,施策売上の営業利益率,—,%,仮置き,init_margin
+F-xxx,成り行き売上に対する減価償却費の比率,—,%,推定,da_rate
+F-xxx,成り行き売上に対する維持更新投資の比率,—,%,仮置き,maint_capex_rate
+F-xxx,施策投資の償却年数,—,年,仮置き,dep_life
+F-xxx,売上増加額に対する運転資本の増加率,—,%,仮置き,nwc_rate
+F-xxx,実効税率,—,%,仮置き,tax_rate
+F-xxx,有利子負債の平均金利,—,%,仮置き,interest_rate
+F-xxx,配当性向,—,%,公開,payout_ratio
+F-xxx,WACC,—,%,公開,wacc

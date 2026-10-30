@@ -1,0 +1,44 @@
+{
+  "home": {
+    "title": "Prhythm for Consulting",
+    "description": "抽象的な依頼を、ジュニアでも組み立てられ、自分の言葉で説明できるビジネスケースへ",
+    "introFile": "pages/home.md"
+  },
+  "nav": [
+    { "text": "考え方", "link": "/guide/ladder/" },
+    { "text": "ワークフロー", "link": "/workflows/a-revenue-growth/" },
+    { "text": "見本案件", "link": "/cases/hokushin/" },
+    { "text": "逆引き", "link": "/guide/reverse-lookup/" },
+    { "text": "インストール", "link": "/guide/installation/" }
+  ],
+  "sidebar": [
+    {
+      "text": "はじめに",
+      "items": [
+        { "link": "/", "text": "スキル一覧" },
+        { "page": "ladder" },
+        { "page": "principles" },
+        { "page": "questionTime" },
+        { "page": "reverseLookup" },
+        { "page": "installation" }
+      ]
+    },
+    { "text": "ワークフロー", "workflows": true, "collapsed": false },
+    { "text": "見本案件：北辰工業", "cases": true, "collapsed": true },
+    { "groupSkillsBy": "verb" },
+    {
+      "text": "作る人向け",
+      "collapsed": true,
+      "items": [{ "page": "conventions" }, { "page": "roadmap" }]
+    }
+  ],
+  "pages": {
+    "ladder": { "source": "pages/ladder.md", "route": "guide/ladder", "title": "抽象から具体への「はしご」" },
+    "principles": { "source": "pages/principles.md", "route": "guide/principles", "title": "設計原則" },
+    "questionTime": { "source": "pages/question-time.md", "route": "guide/question-time", "title": "先輩質問タイム" },
+    "reverseLookup": { "source": "pages/reverse-lookup.md", "route": "guide/reverse-lookup", "title": "依頼の言い方からの逆引き" },
+    "installation": { "source": "pages/installation.md", "route": "guide/installation", "title": "インストール" },
+    "conventions": { "source": "/CONVENTIONS.md", "route": "guide/conventions", "title": "共通の決まり" },
+    "roadmap": { "source": "pages/roadmap.md", "route": "guide/roadmap", "title": "開発の進め方とロードマップ" }
+  }
+}

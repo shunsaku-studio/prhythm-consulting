@@ -15,7 +15,7 @@ const loadResolvedMeta = (): { nav: { text: string; link: string }[]; sidebar: S
     return {
       nav: [
         { text: 'ホーム', link: '/' },
-        { text: 'GitHub', link: 'https://github.com/shunsaku-studio/Prhythm' },
+        { text: 'GitHub', link: 'https://github.com/shunsaku-studio/prhythm-consulting' },
       ],
       sidebar: [{ text: 'スキル一覧', link: '/' }],
     };
@@ -27,10 +27,10 @@ const meta = loadResolvedMeta();
 
 export default withMermaid(
   defineConfig({
-    title: 'Prhythm',
-    description: 'Agent Skills カタログ',
+    title: 'Prhythm for Consulting',
+    description: '抽象的な依頼を、説明できるビジネスケースへ — Agent Skills 集',
     lang: 'ja-JP',
-    base: process.env.VITEPRESS_BASE ?? '/Prhythm/',
+    base: process.env.VITEPRESS_BASE ?? '/prhythm-consulting/',
     srcDir: '.generated',
     cleanUrls: true,
     lastUpdated: true,
@@ -38,8 +38,11 @@ export default withMermaid(
     themeConfig: {
       nav: meta.nav,
       sidebar: meta.sidebar,
-      socialLinks: [{ icon: 'github', link: 'https://github.com/shunsaku-studio/Prhythm' }],
+      socialLinks: [{ icon: 'github', link: 'https://github.com/shunsaku-studio/prhythm-consulting' }],
       search: { provider: 'local' },
+      outline: { level: [2, 3], label: 'このページの内容' },
+      docFooter: { prev: '前のページ', next: '次のページ' },
+      footer: { message: '会社名・人物・数値の見本はすべて架空です。' },
     },
 
     mermaid: {},

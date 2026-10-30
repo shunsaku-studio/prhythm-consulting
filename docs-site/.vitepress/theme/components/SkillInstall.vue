@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue';
 import { useData } from 'vitepress';
 
-const REPO = 'shunsaku-studio/Prhythm';
+const REPO = 'shunsaku-studio/prhythm-consulting';
 
 type AgentId = 'copilot' | 'cursor' | 'claude-code';
 
@@ -12,34 +12,56 @@ const agents: { id: AgentId; label: string }[] = [
   { id: 'copilot', label: 'Copilot' },
 ];
 
-const RANK_LABELS: Record<string, string> = {
-  core: 'コア',
-  utility: 'ユーティリティ',
-  meta: 'メタ',
+const VERB_LABELS: Record<string, string> = {
+  investigate: '調べる',
+  split: '分ける',
+  interpret: '読み解く',
+  estimate: '見積もる',
+  decide: '判断材料にする',
+  plan: '計画にする',
+  communicate: '伝える',
+  audit: '点検する',
 };
 
 const CATEGORY_LABELS: Record<string, string> = {
   business: 'ビジネス',
-  design: 'デザイン',
-  tech: 'テック',
+  finance: '財務',
   delivery: '実行計画',
+};
+
+const AUTONOMY_LABELS: Record<string, string> = {
+  solo: '◎ ひとりで完結',
+  review: '○ レビューに出す前提',
+  together: '△ 上位者と一緒に決める',
+};
+
+const WORKFLOW_LABELS: Record<string, string> = {
+  A: 'A 売上成長',
+  B: 'B 資本効率',
+  C: 'C 新規参入',
+  D: 'D M&A',
 };
 
 const { frontmatter } = useData();
 const activeAgent = ref<AgentId>('claude-code');
 const copied = ref(false);
 
-const skill = computed(() => frontmatter.value.skill as string | undefined);
-const title = computed(() => (frontmatter.value.title as string | undefined) ?? skill.value ?? '');
-const rank = computed(() => frontmatter.value.rank as string | undefined);
-const categories = computed(() => {
-  const raw = frontmatter.value.categories;
-  if (Array.isArray(raw)) return raw as string[];
+const asList = (raw: unknown): string[] => {
+  if (Array.isArray(raw)) return raw.map(String);
   if (typeof raw === 'string' && raw) return [raw];
   return [];
-});
+};
 
-const rankLabel = computed(() => (rank.value ? (RANK_LABELS[rank.value] ?? rank.value) : ''));
+const skill = computed(() => frontmatter.value.skill as string | undefined);
+const title = computed(() => (frontmatter.value.title as string | undefined) ?? skill.value ?? '');
+const verb = computed(() => frontmatter.value.verb as string | undefined);
+const autonomy = computed(() => frontmatter.value.autonomy as string | undefined);
+const maturity = computed(() => frontmatter.value.maturity as string | undefined);
+const categories = computed(() => asList(frontmatter.value.categories));
+const workflows = computed(() => asList(frontmatter.value.workflows));
+const hasBadges = computed(
+  () => !!(verb.value || autonomy.value || maturity.value || categories.value.length),
+);
 
 const command = computed(() => {
   const name = skill.value;
@@ -70,18 +92,25 @@ const copy = async () => {
   <header v-if="skill" class="skill-page">
     <h1 class="skill-page-title">{{ title }}</h1>
 
-    <div v-if="rank || categories.length" class="skill-badges" aria-label="分類">
-      <span
-        v-if="rank"
-        class="skill-badge skill-badge--rank"
-        :class="`skill-badge--${rank}`"
-      >{{ rankLabel }}</span>
+    <div v-if="hasBadges" class="skill-badges" aria-label="分類">
+      <span v-if="verb" class="skill-badge skill-badge--verb">{{ VERB_LABELS[verb] ?? verb }}</span>
       <span
         v-for="cat in categories"
         :key="cat"
         class="skill-badge skill-badge--cat"
         :class="`skill-badge--${cat}`"
       >{{ CATEGORY_LABELS[cat] ?? cat }}</span>
+      <span v-if="autonomy" class="skill-badge skill-badge--autonomy">{{ AUTONOMY_LABELS[autonomy] ?? autonomy }}</span>
+      <span
+        v-if="maturity"
+        class="skill-badge"
+        :class="`skill-badge--${maturity}`"
+      >{{ maturity === 'provisional' ? '仮の型' : '正式' }}</span>
+      <span
+        v-for="w in workflows"
+        :key="w"
+        class="skill-badge skill-badge--workflow"
+      >{{ WORKFLOW_LABELS[w] ?? w }}</span>
     </div>
 
     <div class="skill-install" aria-label="インストール">

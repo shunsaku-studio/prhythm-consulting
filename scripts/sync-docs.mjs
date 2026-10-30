@@ -1,10 +1,15 @@
 #!/usr/bin/env node
 /**
- * docs-site/site.meta.json を正本に .generated/ と VitePress 用 meta を生成する。
+ * docs-site/site.meta.json を正本に、VitePress 用のページ（docs-site/.generated/）と meta を生成する。
  *
- * - skills/{name}/README.md — スキルページ（SSOT は skills/）
- * - docs-site/pages/* — 任意ページ
- * - sidebar / nav — site.meta.json
+ * - skills/{name}/README.md            → /skills/{name}/            （SSOT は skills/）
+ * - skills/{name}/references/*.md      → /skills/{name}/references/{file}
+ * - workflows/*.md                     → /workflows/{file}/
+ * - cases/{case}/**.md                 → /cases/{case}/{path}/
+ * - docs-site/pages/*, CONVENTIONS.md  → site.meta.json の pages
+ *
+ * Markdown 内の相対リンクはリポジトリ上のパスとして解決し、ページになったものはサイト内リンクに、
+ * ならなかったもの（CSV、スクリプトなど）は GitHub のファイルへのリンクに書き換える。
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -12,165 +17,108 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SKILLS_DIR = path.join(ROOT, 'skills');
+const WORKFLOWS_DIR = path.join(ROOT, 'workflows');
+const CASES_DIR = path.join(ROOT, 'cases');
 const DOCS_SITE = path.join(ROOT, 'docs-site');
 const META_PATH = path.join(DOCS_SITE, 'site.meta.json');
 const OUT_DIR = path.join(DOCS_SITE, '.generated');
 const RESOLVED_META_PATH = path.join(OUT_DIR, '.vitepress-meta.json');
-const REPO_BASE = 'https://github.com/shunsaku-studio/Prhythm/blob/main';
+const REPO_BASE = 'https://github.com/shunsaku-studio/prhythm-consulting/blob/main';
 
-const RANK_ORDER = ['core', 'utility', 'meta'];
-const RANK_LABELS = {
-  core: 'コア',
-  utility: 'ユーティリティ',
-  meta: 'メタ',
+/** 作業の型（動詞）。はしごを下りる順 */
+const VERB_ORDER = ['investigate', 'split', 'interpret', 'estimate', 'decide', 'plan', 'communicate', 'audit'];
+const VERB_LABELS = {
+  investigate: '調べる',
+  split: '分ける',
+  interpret: '読み解く',
+  estimate: '見積もる',
+  decide: '判断材料にする',
+  plan: '計画にする',
+  communicate: '伝える',
+  audit: '点検する',
 };
-const CATEGORY_ORDER = ['business', 'design', 'tech', 'delivery'];
-const CATEGORY_LABELS = {
-  business: 'ビジネス',
-  design: 'デザイン',
-  tech: 'テック',
-  delivery: '実行計画',
+const CATEGORY_ORDER = ['business', 'finance', 'delivery'];
+const CATEGORY_LABELS = { business: 'ビジネス', finance: '財務', delivery: '実行計画' };
+const AUTONOMY_LABELS = { solo: '◎', review: '○', together: '△' };
+const AUTONOMY_TITLES = {
+  solo: 'ひとりで完結',
+  review: '結果をレビューに出す前提',
+  together: '上位者と一緒に決める',
 };
+const MATURITY_LABELS = { formal: '正式', provisional: '仮の型' };
+const WORKFLOW_ORDER = ['A', 'B', 'C', 'D'];
 
-/** README「How — 5 つのシーン」の初出順。サイドバー用（束ラベルは出さない） */
+/** README の初出順（お題A のワークフロー順）。サイドバーの並び */
 const SKILL_SIDEBAR_ORDER = [
-  'hearing',
-  'market-landscape',
-  'defining-personas-and-segments',
-  'create-journey-map',
-  'function-usecase-map',
-  'product-vision-and-concept',
-  'assumption-breaker',
-  'feature-backlog-map',
-  'ooui-graphql-modeling',
-  'ooui-architect',
-  'prototype-design-md',
-  'shadcn-explorer',
-  'uncertainty-map',
-  'proto-storyboard',
-  'create-html-deck',
-  'delivery-team-plan',
-  'delivery-phase-plan',
-  'prhythm-skill-review',
-  'prhythm-skill-pr',
-  'prhythm-docs',
+  'target-math',
+  'midterm-plan-reader',
+  'leadership-lens',
+  'issue-tree',
+  'workplan',
+  'company-financials',
+  'financial-analysis',
+  'growth-decomposition',
+  'competitor-benchmark',
+  'market-sizing',
+  'gap-bridge',
+  'option-longlist',
+  'initiative-sizing',
+  'option-evaluation',
+  'capital-capacity',
+  'kpi-tree',
+  'business-case-model',
+  'scenario-sensitivity',
+  'kpi-roadmap',
+  'storyline',
+  'number-audit',
 ];
 
 const readText = (filePath) => fs.readFileSync(filePath, 'utf8');
 const readJson = (filePath) => JSON.parse(readText(filePath));
+const toPosix = (p) => p.split(path.sep).join('/');
+const rel = (abs) => toPosix(path.relative(ROOT, abs));
 
-const parseSkillFrontmatter = (skillSlug) => {
-  const skillMdPath = path.join(SKILLS_DIR, skillSlug, 'SKILL.md');
-  if (!fs.existsSync(skillMdPath)) return { rank: null, categories: [] };
+const writeFile = (outPath, content) => {
+  fs.mkdirSync(path.dirname(outPath), { recursive: true });
+  fs.writeFileSync(outPath, content);
+};
 
-  const text = readText(skillMdPath);
-  if (!text.startsWith('---\n')) return { rank: null, categories: [] };
+/* ---------- frontmatter ---------- */
 
-  const end = text.indexOf('\n---\n', 4);
-  if (end < 0) return { rank: null, categories: [] };
-
-  const fm = text.slice(4, end);
-  const rankMatch = fm.match(/^rank:\s*(\S+)/m);
-  const rank = rankMatch?.[1] ?? null;
-
-  const categories = [];
-  const lines = fm.split('\n');
-  let inCategories = false;
-  for (const line of lines) {
-    if (/^categories:\s*$/.test(line)) {
-      inCategories = true;
+const parseFrontmatter = (text) => {
+  if (!text.startsWith('---\n')) return {};
+  const end = text.indexOf('\n---', 4);
+  if (end < 0) return {};
+  const fm = {};
+  let listKey = null;
+  for (const line of text.slice(4, end).split('\n')) {
+    const item = line.match(/^\s+-\s+(.+?)\s*$/);
+    if (listKey && item) {
+      fm[listKey].push(item[1].replace(/^["']|["']$/g, ''));
       continue;
     }
-    if (inCategories) {
-      const item = line.match(/^\s+-\s+(\S+)/);
-      if (item) {
-        categories.push(item[1]);
-        continue;
-      }
-      if (/^[a-zA-Z_]/.test(line)) break;
+    const kv = line.match(/^([a-zA-Z_-]+):\s*(.*)$/);
+    if (!kv) continue;
+    const [, key, raw] = kv;
+    const value = raw.trim();
+    if (value === '') {
+      fm[key] = [];
+      listKey = key;
+    } else if (value === '>-' || value === '>' || value === '|') {
+      fm[key] = '';
+      listKey = null;
+    } else {
+      fm[key] = value.replace(/^["']|["']$/g, '');
+      listKey = null;
     }
   }
-
-  return { rank, categories };
-};
-
-const categoryBadgeHtml = (categories) =>
-  (categories ?? [])
-    .map(
-      (cat) =>
-        `<span class="skill-badge skill-badge--cat skill-badge--${cat}">${CATEGORY_LABELS[cat] ?? cat}</span>`,
-    )
-    .join(' ');
-
-const sortSkillsByTaxonomy = (skills) =>
-  [...skills].sort((a, b) => {
-    const ra = RANK_ORDER.indexOf(a.rank ?? '');
-    const rb = RANK_ORDER.indexOf(b.rank ?? '');
-    if (ra !== rb) return (ra === -1 ? 99 : ra) - (rb === -1 ? 99 : rb);
-
-    const ca = CATEGORY_ORDER.indexOf(a.categories?.[0] ?? '');
-    const cb = CATEGORY_ORDER.indexOf(b.categories?.[0] ?? '');
-    if (ca !== cb) return (ca === -1 ? 99 : ca) - (cb === -1 ? 99 : cb);
-
-    return a.title.localeCompare(b.title, 'ja');
-  });
-
-const loadMeta = () => {
-  if (!fs.existsSync(META_PATH)) {
-    throw new Error(`site.meta.json が見つかりません: ${META_PATH}`);
-  }
-  return readJson(META_PATH);
-};
-
-const listAllSkills = () =>
-  fs
-    .readdirSync(SKILLS_DIR, { withFileTypes: true })
-    .filter((d) => d.isDirectory() && !d.name.startsWith('.'))
-    .map((d) => d.name)
-    .filter((name) => fs.existsSync(path.join(SKILLS_DIR, name, 'README.md')))
-    .sort();
-
-const resolveSkillInclude = (skillsConfig) => {
-  const include = skillsConfig?.include ?? 'all';
-  if (include === 'all') return listAllSkills();
-  if (!Array.isArray(include)) {
-    throw new Error('skills.include は "all" または string[] である必要があります');
-  }
-  for (const slug of include) {
-    if (!fs.existsSync(path.join(SKILLS_DIR, slug, 'README.md'))) {
-      throw new Error(`skills.include に未知のスキル: ${slug}`);
-    }
-  }
-  return [...include].sort();
-};
-
-const extractTitle = (content) =>
-  content.match(/^#\s+(.+)$/m)?.[1]?.trim() ?? 'Untitled';
-
-const extractSummary = (content) => {
-  const fromSection = content.match(/##\s+概要\s*\n+([\s\S]*?)(?=\n##\s|\n<details>|\Z)/)?.[1] ?? '';
-  const fromSectionLine = fromSection
-    .split('\n')
-    .map((line) => line.trim())
-    .find((line) => line && !line.startsWith('<'));
-  if (fromSectionLine) return fromSectionLine;
-
-  const fromBlockquote = content.match(/^>\s+(.+)$/m)?.[1]?.trim();
-  if (fromBlockquote) return fromBlockquote;
-
-  return (
-    content
-      .replace(/^#\s+.+\n+/, '')
-      .split('\n')
-      .map((line) => line.trim())
-      .find((line) => line && !line.startsWith('<') && line !== '---') ?? ''
-  );
+  return fm;
 };
 
 const toFrontmatter = (fields) => {
   const lines = ['---'];
   for (const [key, value] of Object.entries(fields)) {
-    if (value !== undefined && value !== null && value !== '') {
+    if (value !== undefined && value !== null && value !== '' && !(Array.isArray(value) && !value.length)) {
       lines.push(`${key}: ${JSON.stringify(value)}`);
     }
   }
@@ -178,346 +126,373 @@ const toFrontmatter = (fields) => {
   return lines.join('\n');
 };
 
+const extractTitle = (content) => content.match(/^#\s+(.+)$/m)?.[1]?.trim() ?? 'Untitled';
+const stripTitle = (content) => content.replace(/^#\s+.+\n+/, '');
+
+const extractSummary = (content) => {
+  const fromSection = content.match(/##\s+概要\s*\n+([\s\S]*?)(?=\n##\s|$)/)?.[1] ?? '';
+  const line = fromSection
+    .split('\n')
+    .map((l) => l.trim())
+    .find((l) => l && !l.startsWith('<') && !l.startsWith('>'));
+  if (line) return line;
+  return (
+    stripTitle(content)
+      .split('\n')
+      .map((l) => l.trim())
+      .find((l) => l && !l.startsWith('<') && !l.startsWith('#') && l !== '---') ?? ''
+  );
+};
+
+/** 概要の 1 文目だけ（一覧の表用） */
+const firstSentence = (text) => {
+  const m = text.match(/^(.+?。)/);
+  return (m ? m[1] : text).replace(/\|/g, '\\|');
+};
+
+/* ---------- ルート表とリンクの書き換え ---------- */
+
+/** リポジトリ上のパス（posix） → サイト内リンク */
+const routeMap = new Map();
+
 const routeToLink = (route) => {
-  const normalized = route.replace(/\\/g, '/').replace(/^\//, '').replace(/\/index\.md$/, '');
-  return normalized.endsWith('/') ? `/${normalized}` : `/${normalized}/`;
+  const normalized = route.replace(/^\//, '').replace(/\/index$/, '');
+  return normalized === '' ? '/' : `/${normalized}/`;
 };
 
-const repoPath = (skillSlug, ...segments) =>
-  `${REPO_BASE}/skills/${skillSlug}/${segments.join('/')}`;
-
-const rewriteSkillLinks = (content, skillSlug) =>
-  content
-    // 関連スキル: ../foo / ../foo/ / ../foo/README / ../foo/README.md → /skills/foo/
-    .replace(/\]\(\.\.\/([a-z0-9-]+)(?:\/README(?:\.md)?)?\/?\)/g, '](/skills/$1/)')
-    .replace(/\]\(docs\/([^)#]+?)\.md\)/g, `](/skills/${skillSlug}/docs/$1)`)
-    .replace(/\]\((reference\.md)\)/g, `](/skills/${skillSlug}/reference)`)
-    .replace(/\]\(\.\.\/\.\.\/([^)]+)\)/g, (_, target) => `](${REPO_BASE}/${target})`)
-    .replace(/\]\((SKILL\.md)\)/g, `](${repoPath(skillSlug, 'SKILL.md')})`)
-    .replace(/\]\(\.\.\/(templates\/[^)]+)\)/g, (_, target) => `](${repoPath(skillSlug, target)})`)
-    .replace(/\]\((references\/[^)]*)\)/g, (_, target) => `](${repoPath(skillSlug, target)})`)
-    .replace(/\]\((templates\/[^)]+)\)/g, (_, target) => `](${repoPath(skillSlug, target)})`)
-    // 同階層の補助ファイル（example.md, questions.md 等）はページ化していないため GitHub 直リンクにする
-    .replace(/\]\(([a-zA-Z0-9_-]+\.md)\)/g, (_, target) => `](${repoPath(skillSlug, target)})`);
-
-const writeFile = (outPath, content) => {
-  fs.mkdirSync(path.dirname(outPath), { recursive: true });
-  fs.writeFileSync(outPath, content);
+const register = (repoRel, link) => {
+  routeMap.set(repoRel, link);
+  if (repoRel.endsWith('/README.md')) routeMap.set(repoRel.replace(/\/README\.md$/, ''), link);
 };
 
-const buildSkillRegistry = (skillSlugs) =>
+const rewriteLinks = (content, sourceAbs) => {
+  const baseDir = path.dirname(sourceAbs);
+  return content.replace(/(!?)\]\(([^)\s]+)(\s+"[^"]*")?\)/g, (match, bang, target, title = '') => {
+    if (/^(https?:|mailto:|#|\/)/.test(target)) return match;
+    const [pathPart, hash = ''] = target.split('#');
+    const abs = path.resolve(baseDir, decodeURI(pathPart));
+    let repoRel = rel(abs).replace(/\/$/, '');
+    if (repoRel.startsWith('..')) return match;
+    const anchor = hash ? `#${hash}` : '';
+    if (routeMap.has(repoRel)) return `${bang}](${routeMap.get(repoRel)}${anchor}${title})`;
+    if (routeMap.has(`${repoRel}/README.md`)) {
+      return `${bang}](${routeMap.get(`${repoRel}/README.md`)}${anchor}${title})`;
+    }
+    if (bang) {
+      // 画像は生成先にコピーして相対参照のまま使う
+      return match;
+    }
+    const kind = fs.existsSync(abs) && fs.statSync(abs).isDirectory() ? 'tree' : 'blob';
+    return `](${REPO_BASE.replace('/blob/', `/${kind}/`)}/${repoRel}${anchor}${title})`;
+  });
+};
+
+/* ---------- スキル ---------- */
+
+const listSkills = () =>
+  fs
+    .readdirSync(SKILLS_DIR, { withFileTypes: true })
+    .filter((d) => d.isDirectory() && !d.name.startsWith('.'))
+    .map((d) => d.name)
+    .filter((name) => fs.existsSync(path.join(SKILLS_DIR, name, 'README.md')))
+    .sort();
+
+const listReferences = (slug) => {
+  const dir = path.join(SKILLS_DIR, slug, 'references');
+  if (!fs.existsSync(dir)) return [];
+  const order = ['intake', 'method', 'pitfalls', 'questions', 'eval-scenarios', 'eval-rubric'];
+  return fs
+    .readdirSync(dir)
+    .filter((f) => f.endsWith('.md'))
+    .map((f) => f.replace(/\.md$/, ''))
+    .sort((a, b) => {
+      const ia = order.indexOf(a);
+      const ib = order.indexOf(b);
+      return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib) || a.localeCompare(b);
+    });
+};
+
+const buildSkillRegistry = (slugs) =>
   Object.fromEntries(
-    skillSlugs.map((slug) => {
-      const content = readText(path.join(SKILLS_DIR, slug, 'README.md'));
-      const { rank, categories } = parseSkillFrontmatter(slug);
+    slugs.map((slug) => {
+      const readme = readText(path.join(SKILLS_DIR, slug, 'README.md'));
+      const skillMd = path.join(SKILLS_DIR, slug, 'SKILL.md');
+      const fm = fs.existsSync(skillMd) ? parseFrontmatter(readText(skillMd)) : {};
+      const asList = (v) => (Array.isArray(v) ? v : v ? [v] : []);
       return [
         slug,
         {
           slug,
-          title: extractTitle(content),
-          summary: rewriteSkillLinks(extractSummary(content), slug),
+          title: extractTitle(readme),
+          summary: extractSummary(readme),
           link: `/skills/${slug}/`,
-          rank,
-          categories,
-          hasReference: fs.existsSync(path.join(SKILLS_DIR, slug, 'reference.md')),
-          docs: fs.existsSync(path.join(SKILLS_DIR, slug, 'docs'))
-            ? fs
-                .readdirSync(path.join(SKILLS_DIR, slug, 'docs'))
-                .filter((f) => f.endsWith('.md'))
-                .map((f) => f.replace(/\.md$/, ''))
-                .sort()
-            : [],
+          verb: fm.verb ?? null,
+          categories: asList(fm.categories),
+          autonomy: fm.autonomy ?? null,
+          maturity: fm.maturity ?? null,
+          workflows: asList(fm.workflows).map(String),
+          references: listReferences(slug),
         },
       ];
     }),
   );
 
-const syncReadme = (skillSlug, skillMeta) => {
-  const content = readText(path.join(SKILLS_DIR, skillSlug, 'README.md'));
-  const title = extractTitle(content);
-  const description = extractSummary(content);
-  const body = content.replace(/^#\s+.+\n+/, '');
-  const frontmatter = toFrontmatter({
-    title,
-    skill: skillSlug,
-    description,
-    ...(skillMeta?.rank ? { rank: skillMeta.rank } : {}),
-    ...(skillMeta?.categories?.length ? { categories: skillMeta.categories } : {}),
-  });
+const REFERENCE_LABELS = {
+  intake: '始める前に聞くこと',
+  method: '手順',
+  pitfalls: 'よく外す点',
+  questions: '先輩が聞くとよい問い',
+  'eval-scenarios': '評価シナリオ',
+  'eval-rubric': '評価基準',
+};
+
+const registerSkillRoutes = (registry) => {
+  for (const skill of Object.values(registry)) {
+    register(`skills/${skill.slug}/README.md`, skill.link);
+    for (const ref of skill.references) {
+      register(`skills/${skill.slug}/references/${ref}.md`, `/skills/${skill.slug}/references/${ref}`);
+    }
+  }
+};
+
+const syncSkill = (skill) => {
+  const src = path.join(SKILLS_DIR, skill.slug, 'README.md');
+  const content = readText(src);
+  const refs = skill.references.length
+    ? [
+        '',
+        '## 参照資料',
+        '',
+        ...skill.references.map((ref) => {
+          const t = extractTitle(readText(path.join(SKILLS_DIR, skill.slug, 'references', `${ref}.md`)));
+          return `- [${REFERENCE_LABELS[ref] ?? t}](/skills/${skill.slug}/references/${ref}) — ${t}`;
+        }),
+        `- [SKILL.md（エージェント向けの手順）](${REPO_BASE}/skills/${skill.slug}/SKILL.md)`,
+        '',
+      ].join('\n')
+    : '';
   writeFile(
-    path.join(OUT_DIR, 'skills', skillSlug, 'index.md'),
-    `${frontmatter}<SkillInstall />\n\n${rewriteSkillLinks(body, skillSlug)}`,
+    path.join(OUT_DIR, 'skills', skill.slug, 'index.md'),
+    `${toFrontmatter({
+      title: skill.title,
+      skill: skill.slug,
+      description: skill.summary,
+      verb: skill.verb,
+      categories: skill.categories,
+      autonomy: skill.autonomy,
+      maturity: skill.maturity,
+      workflows: skill.workflows,
+    })}<SkillInstall />\n\n${rewriteLinks(stripTitle(content), src)}${refs}`,
+  );
+  for (const ref of skill.references) {
+    const refSrc = path.join(SKILLS_DIR, skill.slug, 'references', `${ref}.md`);
+    const refContent = readText(refSrc);
+    writeFile(
+      path.join(OUT_DIR, 'skills', skill.slug, 'references', `${ref}.md`),
+      `${toFrontmatter({ title: `${skill.slug} — ${extractTitle(refContent)}` })}${rewriteLinks(refContent, refSrc)}\n\n---\n\n[← ${skill.title}](/skills/${skill.slug}/)\n`,
+    );
+  }
+};
+
+/* ---------- ワークフローと案件 ---------- */
+
+const listMarkdown = (dir) => {
+  if (!fs.existsSync(dir)) return [];
+  const out = [];
+  const walk = (d) => {
+    for (const entry of fs.readdirSync(d, { withFileTypes: true })) {
+      const abs = path.join(d, entry.name);
+      if (entry.isDirectory()) walk(abs);
+      else if (entry.name.endsWith('.md')) out.push(abs);
+    }
+  };
+  walk(dir);
+  return out.sort();
+};
+
+const collectWorkflows = () =>
+  listMarkdown(WORKFLOWS_DIR)
+    .filter((abs) => path.basename(abs) !== 'README.md')
+    .map((abs) => {
+      const slug = path.basename(abs, '.md');
+      const link = `/workflows/${slug}/`;
+      register(rel(abs), link);
+      return { abs, slug, link, title: extractTitle(readText(abs)) };
+    });
+
+const collectCases = () => {
+  if (!fs.existsSync(CASES_DIR)) return [];
+  return fs
+    .readdirSync(CASES_DIR, { withFileTypes: true })
+    .filter((d) => d.isDirectory())
+    .map((d) => {
+      const caseDir = path.join(CASES_DIR, d.name);
+      const files = listMarkdown(caseDir).map((abs) => {
+        const inner = toPosix(path.relative(caseDir, abs)).replace(/\.md$/, '');
+        const route = inner === 'README' ? `cases/${d.name}` : `cases/${d.name}/${inner}`;
+        const link = routeToLink(route);
+        register(rel(abs), link);
+        return { abs, inner, route, link, title: extractTitle(readText(abs)) };
+      });
+      const readme = files.find((f) => f.inner === 'README');
+      return { slug: d.name, title: readme?.title ?? d.name, link: `/cases/${d.name}/`, files };
+    });
+};
+
+const syncPlainPage = (abs, route, extra = {}) => {
+  const content = readText(abs);
+  const title = extra.title ?? extractTitle(content);
+  const body = extra.keepTitle ? content : stripTitle(content);
+  writeFile(
+    path.join(OUT_DIR, route, 'index.md'),
+    `${toFrontmatter({ title, ...(extra.description ? { description: extra.description } : {}) })}${extra.keepTitle ? '' : `# ${title}\n\n`}${rewriteLinks(body, abs)}`,
   );
 };
 
-const syncSkillMarkdown = (skillSlug, relativePath, skillsConfig) => {
-  const src = path.join(SKILLS_DIR, skillSlug, relativePath);
-  if (!fs.existsSync(src)) return;
+/* ---------- ホーム（スキル一覧） ---------- */
 
-  const content = readText(src);
-  const title = extractTitle(content);
-  const baseName = path.basename(relativePath, '.md');
-  const outRel =
-    baseName === 'reference'
-      ? path.join('skills', skillSlug, 'reference.md')
-      : path.join('skills', skillSlug, relativePath);
-  const body = content.replace(/^#\s+.+\n+/, '');
-  const frontmatter = toFrontmatter({ title, skill: skillSlug });
-  writeFile(path.join(OUT_DIR, outRel), `${frontmatter}${rewriteSkillLinks(body, skillSlug)}`);
+const badge = (cls, label, title) =>
+  `<span class="skill-badge ${cls}"${title ? ` title="${title}"` : ''}>${label}</span>`;
+
+const categoryBadges = (cats) =>
+  cats.map((c) => badge(`skill-badge--cat skill-badge--${c}`, CATEGORY_LABELS[c] ?? c)).join(' ');
+
+const sortBySidebarOrder = (skills) => {
+  const idx = new Map(SKILL_SIDEBAR_ORDER.map((s, i) => [s, i]));
+  return [...skills].sort(
+    (a, b) => (idx.get(a.slug) ?? 99) - (idx.get(b.slug) ?? 99) || a.slug.localeCompare(b.slug),
+  );
 };
 
-const syncSkillImages = (skillSlug) => {
-  const srcDir = path.join(SKILLS_DIR, skillSlug);
-  const destDir = path.join(OUT_DIR, 'skills', skillSlug);
-  for (const name of fs.readdirSync(srcDir)) {
-    if (!/^slide-sample.*\.png$/i.test(name)) continue;
-    fs.mkdirSync(destDir, { recursive: true });
-    fs.copyFileSync(path.join(srcDir, name), path.join(destDir, name));
-  }
-};
+const workflowMarks = (skill) =>
+  WORKFLOW_ORDER.map((w) => (skill.workflows.includes(w) ? '●' : '')).join(' | ');
 
-const syncSkill = (skillSlug, skillsConfig, skillMeta) => {
-  syncReadme(skillSlug, skillMeta);
-  syncSkillImages(skillSlug);
-  if (skillsConfig.syncReference !== false) {
-    syncSkillMarkdown(skillSlug, 'reference.md', skillsConfig);
-  }
-  if (skillsConfig.syncDocs !== false) {
-    const docsDir = path.join(SKILLS_DIR, skillSlug, 'docs');
-    if (fs.existsSync(docsDir)) {
-      for (const entry of fs.readdirSync(docsDir, { withFileTypes: true })) {
-        if (entry.isFile() && entry.name.endsWith('.md')) {
-          syncSkillMarkdown(skillSlug, path.join('docs', entry.name), skillsConfig);
-        }
-      }
-    }
-  }
-};
-
-const syncCustomPage = (pageId, pageConfig) => {
-  const src = path.join(DOCS_SITE, pageConfig.source);
-  if (!fs.existsSync(src)) {
-    throw new Error(`pages.${pageId}.source が見つかりません: ${pageConfig.source}`);
-  }
-
-  const content = readText(src);
-  const title = pageConfig.title ?? extractTitle(content);
-  const route = pageConfig.route ?? pageId;
-  const body = pageConfig.keepTitle ? content : content.replace(/^#\s+.+\n+/, '');
-  const frontmatter = toFrontmatter({
-    title,
-    ...(pageConfig.description ? { description: pageConfig.description } : {}),
-    ...(pageConfig.layout ? { layout: pageConfig.layout } : {}),
-  });
-
-  writeFile(path.join(OUT_DIR, route, 'index.md'), `${frontmatter}${body}`);
-
-  return {
-    id: pageId,
-    title,
-    route,
-    link: routeToLink(route),
-  };
-};
-
-const generateHome = (meta, skillRegistry) => {
-  const allSkills = sortSkillsByTaxonomy(Object.values(skillRegistry));
-
-  const legend = [
-    '## 分類',
-    '',
-    '- **ランク** — `コア` は他スキルの入力になる成果物を出す / `ユーティリティ` は端末成果物や横断ツール / `メタ` はスキル自体の整備',
-    '- **カテゴリ** — 誰が使うかではなく、注入する視点（`ビジネス` / `デザイン` / `テック` / `実行計画`）。2つ持つスキルは職能横断の対話誘発装置',
-    '',
-  ];
-
+const generateHome = (meta, registry) => {
+  const all = Object.values(registry);
   const sections = [];
-  for (const rank of RANK_ORDER) {
-    const skills = allSkills.filter((s) => s.rank === rank);
-    if (skills.length === 0) continue;
-
-    const isMeta = rank === 'meta';
-    sections.push(`## ${RANK_LABELS[rank]}`);
-    sections.push('');
-    if (isMeta) {
-      sections.push('| スキル | 概要 |');
-      sections.push('|--------|------|');
-      for (const skill of skills) {
-        sections.push(
-          `| [${skill.title}](${skill.link}) | ${skill.summary.replace(/\|/g, '\\|')} |`,
-        );
-      }
-    } else {
-      sections.push('| スキル | カテゴリ | 概要 |');
-      sections.push('|--------|----------|------|');
-      for (const skill of skills) {
-        const cats = categoryBadgeHtml(skill.categories) || '—';
-        sections.push(
-          `| [${skill.title}](${skill.link}) | ${cats} | ${skill.summary.replace(/\|/g, '\\|')} |`,
-        );
-      }
-    }
-    sections.push('');
-  }
-
-  // skills without rank (should not happen after taxonomy rollout)
-  const unranked = allSkills.filter((s) => !s.rank);
-  if (unranked.length > 0) {
-    sections.push('## 未分類');
-    sections.push('');
-    sections.push('| スキル | 概要 |');
-    sections.push('|--------|------|');
-    for (const skill of unranked) {
+  for (const verb of VERB_ORDER) {
+    const skills = sortBySidebarOrder(all.filter((s) => s.verb === verb));
+    if (!skills.length) continue;
+    sections.push(`### ${VERB_LABELS[verb]}`, '');
+    sections.push('| スキル | 領域 | 単独度 | 区分 | A | B | C | D | 概要 |');
+    sections.push('|--------|------|:------:|------|:-:|:-:|:-:|:-:|------|');
+    for (const s of skills) {
+      const auto = s.autonomy ? `<span title="${AUTONOMY_TITLES[s.autonomy]}">${AUTONOMY_LABELS[s.autonomy]}</span>` : '—';
+      const mat = s.maturity === 'provisional' ? badge('skill-badge--provisional', '仮の型') : badge('skill-badge--formal', '正式');
       sections.push(
-        `| [${skill.title}](${skill.link}) | ${skill.summary.replace(/\|/g, '\\|')} |`,
+        `| [${s.slug}](${s.link}) | ${categoryBadges(s.categories) || '—'} | ${auto} | ${mat} | ${workflowMarks(s)} | ${firstSentence(s.summary)} |`,
       );
     }
     sections.push('');
   }
-
+  const unclassified = all.filter((s) => !VERB_ORDER.includes(s.verb));
+  if (unclassified.length) {
+    sections.push('### 未分類', '', '| スキル | 概要 |', '|--------|------|');
+    for (const s of unclassified) sections.push(`| [${s.slug}](${s.link}) | ${firstSentence(s.summary)} |`);
+    sections.push('');
+  }
+  const intro = meta.home?.introFile ? readText(path.join(DOCS_SITE, meta.home.introFile)) : '';
   return [
-    toFrontmatter({
-      title: meta.home?.title ?? 'Prhythm Skills',
-      description: meta.home?.description,
-    }),
-    `# ${meta.home?.title ?? 'Prhythm Skills'}`,
+    toFrontmatter({ title: meta.home?.title, description: meta.home?.description }),
+    intro,
     '',
-    meta.home?.intro ?? '',
+    '## スキル一覧',
     '',
-    ...legend,
+    '作業の型（動詞）ごとに並べている。A〜D は使うお題、単独度は ◎ ひとりで完結 / ○ 結果をレビューに出す前提 / △ 上位者と一緒に決める。「仮の型」はテンプレートとよく外す点だけを置いた最小版。',
+    '',
     ...sections,
   ].join('\n');
 };
 
-const sortSkillsBySidebarOrder = (skills) => {
-  const index = new Map(SKILL_SIDEBAR_ORDER.map((slug, i) => [slug, i]));
-  return [...skills].sort((a, b) => {
-    const ia = index.has(a.slug) ? index.get(a.slug) : SKILL_SIDEBAR_ORDER.length;
-    const ib = index.has(b.slug) ? index.get(b.slug) : SKILL_SIDEBAR_ORDER.length;
-    if (ia !== ib) return ia - ib;
-    return a.slug.localeCompare(b.slug);
+/* ---------- サイドバー ---------- */
+
+const buildVerbSidebar = (registry) =>
+  VERB_ORDER.flatMap((verb) => {
+    const skills = sortBySidebarOrder(Object.values(registry).filter((s) => s.verb === verb));
+    if (!skills.length) return [];
+    return [
+      {
+        text: `スキル：${VERB_LABELS[verb]}`,
+        collapsed: false,
+        items: skills.map((s) => ({ text: s.slug, link: s.link })),
+      },
+    ];
   });
-};
-
-const buildRankGroupedSidebar = (skillRegistry, expandMap = {}) => {
-  const groups = [];
-  for (const rank of RANK_ORDER) {
-    const skills = sortSkillsBySidebarOrder(
-      Object.values(skillRegistry).filter((s) => s.rank === rank),
-    );
-    if (skills.length === 0) continue;
-
-    groups.push({
-      text: RANK_LABELS[rank],
-      collapsed: rank === 'meta',
-      items: skills.map((skill) =>
-        buildSkillSidebarItems(skill.slug, skill, expandMap[skill.slug] ?? false),
-      ),
-    });
-  }
-  return groups;
-};
-
-const buildSkillSidebarItems = (slug, skill, expand) => {
-  const items = [{ text: 'Overview', link: skill.link }];
-
-  if (expand !== false && skill.hasReference) {
-    items.push({ text: 'Reference', link: `/skills/${slug}/reference` });
-  }
-
-  if (expand === true || expand === 'docs' || expand === 'all') {
-    for (const doc of skill.docs) {
-      const docTitle = extractTitle(readText(path.join(SKILLS_DIR, slug, 'docs', `${doc}.md`)));
-      items.push({ text: docTitle, link: `/skills/${slug}/docs/${doc}` });
-    }
-  }
-
-  return expand
-    ? { text: skill.title, collapsed: false, items }
-    : { text: skill.title, link: skill.link };
-};
 
 const resolveSidebarItems = (items, ctx) =>
   (items ?? []).flatMap((item) => {
-    if (item.groupSkillsBy === 'rank') {
-      return buildRankGroupedSidebar(ctx.skills, item.expand ?? ctx.sidebarExpand ?? {});
+    if (item.groupSkillsBy === 'verb') return buildVerbSidebar(ctx.skills);
+    if (item.workflows) {
+      return [{ text: item.text, collapsed: item.collapsed, items: ctx.workflows.map((w) => ({ text: w.title, link: w.link })) }];
     }
-
+    if (item.cases) {
+      return ctx.cases.map((c) => ({
+        text: item.text ?? c.title,
+        collapsed: item.collapsed ?? true,
+        items: c.files.map((f) => ({ text: f.inner === 'README' ? '案件の進め方' : f.title, link: f.link })),
+      }));
+    }
     if (item.items) {
-      return [
-        {
-          text: item.text,
-          ...(item.collapsed !== undefined ? { collapsed: item.collapsed } : {}),
-          items: resolveSidebarItems(item.items, ctx),
-        },
-      ];
+      return [{ text: item.text, ...(item.collapsed !== undefined ? { collapsed: item.collapsed } : {}), items: resolveSidebarItems(item.items, ctx) }];
     }
-
-    if (item.link) {
-      return [{ text: item.text ?? item.link, link: item.link }];
-    }
-
+    if (item.link) return [{ text: item.text ?? item.link, link: item.link }];
     if (item.page) {
       const page = ctx.pages[item.page];
       if (!page) throw new Error(`sidebar: 未知の page "${item.page}"`);
       return [{ text: item.text ?? page.title, link: page.link }];
     }
-
-    if (item.skill) {
-      const skill = ctx.skills[item.skill];
-      if (!skill) throw new Error(`sidebar: 未知の skill "${item.skill}"`);
-      return [buildSkillSidebarItems(item.skill, skill, item.expand ?? false)];
-    }
-
     throw new Error(`sidebar item を解決できません: ${JSON.stringify(item)}`);
   });
 
-const cleanOutDir = () => {
-  fs.rmSync(OUT_DIR, { recursive: true, force: true });
-  fs.mkdirSync(OUT_DIR, { recursive: true });
-};
+/* ---------- main ---------- */
 
 const main = () => {
-  const meta = loadMeta();
-  const skillsConfig = meta.skills ?? {};
-  const skillSlugs = resolveSkillInclude(skillsConfig);
+  if (!fs.existsSync(META_PATH)) throw new Error(`site.meta.json が見つかりません: ${META_PATH}`);
+  const meta = readJson(META_PATH);
 
-  if (skillSlugs.length === 0) {
-    throw new Error('同期対象のスキルがありません');
+  fs.rmSync(OUT_DIR, { recursive: true, force: true });
+  fs.mkdirSync(OUT_DIR, { recursive: true });
+
+  // 1. ルート表を先に作る（相互リンクの解決に使う）
+  const slugs = listSkills();
+  const registry = buildSkillRegistry(slugs);
+  registerSkillRoutes(registry);
+  const workflows = collectWorkflows();
+  const cases = collectCases();
+  const pages = {};
+  for (const [id, cfg] of Object.entries(meta.pages ?? {})) {
+    const src = path.join(cfg.source.startsWith('/') ? ROOT : DOCS_SITE, cfg.source.replace(/^\//, ''));
+    if (!fs.existsSync(src)) throw new Error(`pages.${id}.source が見つかりません: ${cfg.source}`);
+    const link = routeToLink(cfg.route);
+    register(rel(src), link);
+    pages[id] = { id, src, cfg, link, title: cfg.title ?? extractTitle(readText(src)) };
   }
 
-  cleanOutDir();
-
-  const skillRegistry = buildSkillRegistry(skillSlugs);
-  for (const slug of skillSlugs) syncSkill(slug, skillsConfig, skillRegistry[slug]);
-
-  const pageRegistry = {};
-  for (const [pageId, pageConfig] of Object.entries(meta.pages ?? {})) {
-    pageRegistry[pageId] = syncCustomPage(pageId, pageConfig);
+  // 2. ページを書き出す
+  for (const skill of Object.values(registry)) syncSkill(skill);
+  for (const w of workflows) syncPlainPage(w.abs, `workflows/${w.slug}`);
+  for (const c of cases) for (const f of c.files) syncPlainPage(f.abs, f.route);
+  for (const p of Object.values(pages)) {
+    syncPlainPage(p.src, p.cfg.route, { title: p.title, keepTitle: p.cfg.keepTitle, description: p.cfg.description });
   }
-
-  writeFile(path.join(OUT_DIR, 'index.md'), generateHome(meta, skillRegistry));
+  writeFile(path.join(OUT_DIR, 'index.md'), generateHome(meta, registry));
 
   const resolved = {
     nav: meta.nav ?? [],
-    sidebar: resolveSidebarItems(meta.sidebar ?? [], {
-      pages: pageRegistry,
-      skills: skillRegistry,
-      sidebarExpand: skillsConfig.sidebarExpand ?? {},
-    }),
-    skills: skillSlugs,
-    pages: pageRegistry,
+    sidebar: resolveSidebarItems(meta.sidebar ?? [], { pages, skills: registry, workflows, cases }),
     taxonomy: {
-      ranks: RANK_LABELS,
+      verbs: VERB_LABELS,
       categories: CATEGORY_LABELS,
+      autonomy: AUTONOMY_LABELS,
+      autonomyTitles: AUTONOMY_TITLES,
+      maturity: MATURITY_LABELS,
     },
   };
-
   writeFile(RESOLVED_META_PATH, `${JSON.stringify(resolved, null, 2)}\n`);
 
-  const pageCount = Object.keys(pageRegistry).length;
+  const caseFiles = cases.reduce((n, c) => n + c.files.length, 0);
   console.log(
-    `sync-docs: ${skillSlugs.length} skills, ${pageCount} pages → ${path.relative(ROOT, OUT_DIR)}/`,
+    `sync-docs: ${slugs.length} skills, ${workflows.length} workflows, ${caseFiles} case pages, ${Object.keys(pages).length} pages → ${rel(OUT_DIR)}/`,
   );
 };
 

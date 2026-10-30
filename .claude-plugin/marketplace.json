@@ -1,0 +1,15 @@
+{
+  "name": "prhythm-consulting",
+  "description": "Prhythm for Consulting — 抽象的な依頼を、説明できるビジネスケースへ組み立てるエージェントスキル集",
+  "owner": {
+    "name": "shunsaku-studio"
+  },
+  "plugins": [
+    {
+      "name": "prhythm-consulting",
+      "source": "./",
+      "description": "Prhythm for Consulting — 抽象的な依頼を、説明できるビジネスケースへ組み立てるエージェントスキル集",
+      "version": "0.1.0"
+    }
+  ]
+}

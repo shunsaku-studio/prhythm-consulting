@@ -91,12 +91,19 @@ case/
 │   ├── facts.csv            # F：全ファクトの台帳
 │   ├── financials.csv       # company-financials の出力（縦持ち。列は 9 節）
 │   ├── midterm-plan.md
+│   ├── financials.md        # company-financials の読み取りメモ（不連続の一覧）
+│   ├── financial-analysis.md
+│   ├── growth-decomposition.md
+│   ├── competitor-benchmark.md
+│   ├── midterm-plan.md / midterm-plan.csv
 │   ├── leadership.md
 │   └── market-sizing.md
 ├── client/                  # インサイドアウトの社内データ。公開データと分ける
 ├── 03-gap-bridge.md         # S・G
-├── 04-options.md            # O
-├── 05-initiatives.md        # I
+├── 04-options.md            # O（末尾に option-evaluation の評価マトリクス）
+├── 05-initiative-inputs.csv # initiative-sizing の入力（ID で参照）
+├── 05-initiatives.md / .csv # I
+├── 06-capital-inputs.csv    # capital-capacity の入力（ID で参照）
 ├── 06-capital.md            # C
 ├── 07-kpi-tree.md           # K
 ├── model/                   # business-case-model の出力
@@ -207,3 +214,11 @@ workflows:              # 使うお題
 | `model/` | business-case-model | scenario-sensitivity, kpi-roadmap | `inputs.csv`（`id,label,value,unit,source_tag`）、計算結果の CSV、数式入りの `business-case.xlsx` |
 
 スクリプトが台帳に行を足すときは、接頭辞ごとに使われていない最小の番号から振る。
+
+### 共通の定義
+
+| 用語 | 定義 |
+|------|------|
+| 投下資本（ROIC の分母） | 純資産 + 有利子負債 − 現金及び預金（ネット）。余剰現金だけを引く定義を使うときは、その旨と必要現金の置き方を前提に書く |
+| NOPAT | 営業利益 ×（1 − 実効税率）。実効税率は既定で 30%（仮置き） |
+| 年度 | `FY2025` の形。会社の決算期に合わせ、暦年と混ぜない |

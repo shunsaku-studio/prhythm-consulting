@@ -1,0 +1,8 @@
+id,kpi,fiscal_year,value,unit,source_tag,source
+,連結売上高,FY2026,—,億円,推定,model/model.csv（F-xxx と同じモデル）
+,連結売上高,FY2027,—,億円,推定,model/model.csv（F-xxx と同じモデル）
+,連結売上高,FY2028,—,億円,推定,model/model.csv（F-xxx と同じモデル）
+,連結売上高,FY2029,—,億円,推定,model/model.csv（F-xxx と同じモデル）
+,連結売上高,FY2030,—,億円,推定,F-xxx
+,ROIC,FY2030,—,%,推定,F-xxx
+,（施策の先行指標。例: 量産受注の年換算売上）,FY2027,—,億円,仮置き,—

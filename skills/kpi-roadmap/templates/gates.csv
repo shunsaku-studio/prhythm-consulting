@@ -1,0 +1,2 @@
+gate,date,initiative_id,kpi_id,metric,comparator,threshold,unit,data_source,go_action,exit_criteria,decision_id
+G1,YYYY-MM-DD,I-xxx,K-xxx,（指標）,≥,—,億円,（データの出どころ）,（Go のときに実行すること）,（撤退基準。何がどうなったら、何をやめるか）,
