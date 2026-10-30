@@ -21,8 +21,8 @@
 | base_growth | gap-bridge の成り行き（S-）か market-sizing | `推定`。根拠のない値を置かない |
 | base_margin | 基準年の営業利益 ÷ 売上 | `推定`（計算式に ID） |
 | init_margin | 競合の利益率、施策カード | `推定` か `仮置き` |
-| da_rate | 基準年の減価償却費 ÷ 売上 | `推定` |
-| maint_capex_rate | 過去の設備投資と減価償却の差 | `仮置き` が多い。期限を付ける |
+| da_rate | 基準年の減価償却費 ÷ 売上（financial-analysis の ratios.py が「減価償却費 ÷ 売上高」として登録する ID を使う） | `推定` |
+| maint_capex_rate | 過去の設備投資と減価償却の差。capital-capacity で「維持投資 = 減価償却費」と置いたなら、da_rate と同じ ID を使う（ratios.py は「設備投資額 ÷ 売上高」も登録する） | `仮置き` が多い。期限を付ける |
 | dep_life | 有報の耐用年数の記載 | 5 年以上にする（スクリプトが止める） |
 | nwc_rate | 売上債権・棚卸資産・仕入債務の売上比 | `推定` か `仮置き` |
 | tax_rate | 有報の税効果注記 | `公開` か `仮置き` |

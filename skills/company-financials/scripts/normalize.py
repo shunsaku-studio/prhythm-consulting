@@ -84,6 +84,17 @@ class Ledger:
         })
         return rid
 
+    def find_same_public(self, value: str, unit: str, period: str, keywords: tuple[str, ...],
+                         own_definition: str) -> dict[str, str] | None:
+        """同じ事実が別の言い回しで「公開」として登録済みか。期間・単位・値が同じで、定義に keywords が全部入っている行。
+        自分と同じ定義の行は register が見るので除く。"""
+        for r in self.all_rows():
+            if (r["id"].startswith("F-") and r["source_tag"] == "公開" and r["period"] == period
+                    and r["unit"] == unit and r["definition"] != own_definition and _same(r["value"], value)
+                    and all(k in r["definition"] for k in keywords)):
+                return r
+        return None
+
     def write(self) -> None:
         if not self.path or not self.new:
             return
@@ -325,6 +336,7 @@ def main() -> int:
     ledger = Ledger(a.ledger, a.today)
     merged: dict[tuple, dict[str, str]] = dict(existing)
     changed: list[str] = []
+    reused: list[str] = []
     for r in raw:
         key = (r["fiscal_year"], r["item"], r["segment"], r["basis"])
         if key in merged and merged[key]["value"] != r["value"]:
@@ -337,7 +349,14 @@ def main() -> int:
         if r["value"] in ("", "—"):
             rid = ledger.register("F", "—", r["unit"], definition, r["fiscal_year"], "公開", r["source"] or "—")
         else:
-            rid = ledger.register("F", r["value"], r["unit"], definition, r["fiscal_year"], "公開", r["source"] or "—")
+            # target-math・midterm-plan-reader が先に同じ値を別の言い回しで登録していれば、その ID を使う
+            seg_kw = "連結" if r["segment"] == "連結" else r["segment"]
+            hit = ledger.find_same_public(r["value"], r["unit"], r["fiscal_year"], (r["item"], seg_kw), definition)
+            if hit:
+                rid = hit["id"]
+                reused.append(f"{rid}（{hit['definition']}、{r['fiscal_year']}）を {r['segment']} {r['item']} の ID として使い回した")
+            else:
+                rid = ledger.register("F", r["value"], r["unit"], definition, r["fiscal_year"], "公開", r["source"] or "—")
         merged[key] = {"id": rid, **r}
 
     rows = sorted(merged.values(), key=lambda r: (fy_n(r["fiscal_year"]), r["segment"] != "連結", r["segment"], r["item"]))
@@ -522,6 +541,8 @@ def main() -> int:
         P(f"- 値の上書き: {c}")
     for wmsg in ledger.warnings:
         P(f"- {wmsg}")
+    for rmsg in reused:
+        P(f"- 台帳にある同じ事実を使った: {rmsg}")
     P("")
     text = "\n".join(out)
     print(text)

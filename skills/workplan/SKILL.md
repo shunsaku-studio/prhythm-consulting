@@ -72,13 +72,15 @@ Record the decision in `<case>/decisions.md` as `D-xxx`.
 1. **Body** — `<case>/02-workplan.md`: work table (Q/A → analysis → data → skill → owner →
    deadline → output file), calendar with gates and question times.
 2. **Facts** — the plan rarely has numbers. If it quotes one (e.g. the target), cite the ledger ID
-   in brackets. Q/A/D IDs are written without brackets.
+   in brackets. Q/A/D IDs are written without brackets (see ID rules).
 3. **前提と未確認事項** — owners not yet confirmed, data not yet available, dependencies at risk.
 
 ## ID rules
 
-- Q-xxx, A-xxx and D-xxx are written without brackets in the plan. Bracketed IDs are checked
-  against `facts/facts.csv` by number-audit.
+- Q-xxx, A-xxx and D-xxx are written without brackets in the plan. Bracketed IDs are checked by
+  number-audit: numeric IDs against `facts/facts.csv`; `[Q-]` `[O-]` `[D-]` pass only when a case
+  Markdown file defines them (heading, first table cell or list-item start, e.g. `## D-004` in
+  `decisions.md`). `[A-]` has no defining line in `01-issue-tree.md`, so it would fail.
 
 ## Rules
 

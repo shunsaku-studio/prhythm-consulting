@@ -46,7 +46,7 @@ Details: [references/intake.md](references/intake.md).
 | `facts/financials.csv` | — | Missing → run company-financials first |
 | Two years to compare | first and last year | The window crosses a discontinuity listed in `facts/financials.md` (suggest a window after it) |
 | Tax rate for NOPAT | 30% (仮置き) | Always say it is 仮置き; replace with the 法定実効税率 from the 有報 |
-| Operating cash need (months of sales) | 1 month (仮置き) | Always say it is 仮置き |
+| Operating cash need (months of sales) | not used (invested capital subtracts all cash) | Only with `--cash-months` for the excess-cash variant; then say it is 仮置き |
 | Balances | average of opening and closing | The client's own disclosure uses period-end (e.g. ROE in the 資本コスト disclosure) |
 | Peers CSV | none | competitor data is available (`company,fiscal_year,item,value,unit,basis,source,note`) |
 
@@ -86,7 +86,10 @@ python3 skills/financial-analysis/scripts/ratios.py <case>/facts/financials.csv 
 Definitions the script uses (state them in the output):
 
 - ROE = net income ÷ average 純資産 (`--balance end` for period-end). DuPont = net margin × asset turnover × leverage with the same balances, so the product equals ROE
-- ROIC = NOPAT ÷ average invested capital; NOPAT = operating income × (1 − tax rate); invested capital = 純資産 + interest-bearing debt − excess cash; excess cash = max(0, cash − sales × months ÷ 12)
+- ROIC = NOPAT ÷ average invested capital; NOPAT = operating income × (1 − tax rate); invested capital = 純資産 + interest-bearing debt − 現金及び預金 (CONVENTIONS 共通の定義, the same as capital-capacity and business-case-model). `--cash-months N` switches to the excess-cash variant (subtract only cash above N months of sales, 仮置き); say so in 前提 and do not set it beside the other skills' ROIC
+- The CF table also gives 減価償却費 ÷ 売上高 and 設備投資額 ÷ 売上高 (registered for the `--register` years); business-case-model uses them for `da_rate` and `maint_capex_rate`
+- Segment margins and mix (section 6) carry IDs for the `--register` years; numbers without an ID are printed without a unit and are for reading the trend only. Any segment number a later file or deliverable shows must be one with an ID
+- Peer rows (`--peers`) are registered with the same definition text as competitor-benchmark (`売上高（日本基準、連結）東亜精工`), and a 推定 row whose formula already exists in the ledger (e.g. target-math's ROE) is reused, so running both skills does not duplicate facts
 - ROE change split: each factor's share of ln(ROE1/ROE0), times ΔROE (pt)
 - Operating margin change split: mix effect Σ(Δweight × old margin), rate effect Σ(new weight × Δmargin), the rest = 調整額 and rounding
 - Item aliases: 売上高/売上収益, 親会社株主に帰属する当期純利益/親会社の所有者に帰属する当期利益, 純資産/親会社の所有者に帰属する持分, 総資産/資産合計. If 有利子負債 is missing, it sums 短期借入金, 長期借入金, 社債 etc.

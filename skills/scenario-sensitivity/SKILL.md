@@ -105,7 +105,9 @@ Use evidence in this order, and write it in `source`. Details in `references/met
    ```
 
    Upside and downside results become `F-` / `推定` rows (upserted by definition and period).
-   The base column reuses the IDs business-case-model registered.
+   The base column reuses the IDs business-case-model registered. With `--target-id`, the gap between
+   FY2030 revenue and the target is also registered for base / upside / downside, so a deck can say
+   "x 億円 short of the target" with an ID. Pass `--today` (the case date).
 7. Write `<case>/model/scenarios.md` from `templates/scenarios.md`: link `model/sensitivity.md`,
    state in words what drives the downside, and fill 前提と未確認事項.
 8. **Stop point 2 (human).** If the downside misses the target by a wide margin or breaks the

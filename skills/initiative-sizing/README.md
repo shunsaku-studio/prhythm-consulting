@@ -27,7 +27,7 @@
 2. 市場規模、市場成長率、上乗せシェア、買収先の売上、投資総額を台帳に登録する（仮置きには差し替え期限）
 3. `05-initiative-inputs.csv` に、値ではなく台帳の ID を書く。確度は — のまま
 4. 先輩と一緒に前提（市場、上乗せシェア、開始年、立ち上がり年数、投資）を確かめる
-5. `python3 skills/initiative-sizing/scripts/sizing.py --ledger facts/facts.csv --inputs 05-initiative-inputs.csv --from FY2026 --to FY2030 --out-csv 05-initiatives.csv --out-md 05-initiatives.tables.md --append-ledger --today YYYY-MM-DD`
+5. `python3 skills/initiative-sizing/scripts/sizing.py --ledger facts/facts.csv --inputs 05-initiative-inputs.csv --from FY2026 --to FY2030 --out-csv 05-initiatives.csv --out-md /tmp/05-initiatives.tables.md --append-ledger --today YYYY-MM-DD`
 6. 確度（高/中/低）を人に決めてもらい、入力に書いて回し直す
 7. `templates/initiatives.md` に表を貼り、`05-initiatives.md` にする
 
@@ -49,8 +49,14 @@
 
 ## 具体例
 
-<!-- EXAMPLE: お題A の実行結果で埋める -->
-北辰工業の 05-initiatives.md から、施策カードの表と年次の上乗せ売上、ギャップとの比較を抜粋する（[cases/hokushin/](../../cases/hokushin/)）。
+| ID | 施策 | FY2030 上乗せ売上 | 確度 |
+|----|------|------------------|------|
+| I-001 | EV 熱マネジメント部品の拡販 | 482.7 億円 [I-001] | 中 |
+| I-002 | 半導体製造装置向け部品の能力増強 | 230.8 億円 [I-002] | 中 |
+| I-005 | 産業用センサーの海外展開（提携） | 135.3 億円 [I-005] | 中 |
+| I-006 | 海外同業の中規模買収 | 420.0 億円 [I-006] | 低 |
+
+合計 1,268.8 億円 [F-457] で、ギャップ 2,461 億円 [G-001] の半分ほど。資本の段から戻って I-003 と I-004 を外した（D-010）。全体は [cases/hokushin/05-initiatives.md](../../cases/hokushin/05-initiatives.md)。
 
 ## 先輩が聞くとよい問い
 

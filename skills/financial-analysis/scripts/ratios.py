@@ -16,8 +16,9 @@
   ROE・ROA・回転率・レバレッジは期首と期末の平均残高（期首がない年は期末）。--balance end で期末に切り替え
   ROIC = NOPAT ÷ 投下資本（期中平均）
     NOPAT = 営業利益 × (1 − 税率)          税率は --tax-rate（既定 30%、仮置き）
-    投下資本 = 純資産 + 有利子負債 − 余剰現金
-    余剰現金 = max(0, 現金及び預金 − 売上高 × 必要現金の月数 ÷ 12)  月数は --cash-months（既定 1、仮置き）
+    投下資本 = 純資産 + 有利子負債 − 現金及び預金（CONVENTIONS「共通の定義」。capital-capacity・business-case-model と同じ）
+    --cash-months を渡したときだけ、余剰現金だけを引く定義に切り替える:
+      投下資本 = 純資産 + 有利子負債 − 余剰現金、余剰現金 = max(0, 現金及び預金 − 売上高 × 月数 ÷ 12)（月数は仮置き）
   純資産には非支配株主持分などが入る。ROE の分母を株主資本にしたいときは financials.csv に足して --equity-item で指定
 
 使い方:
@@ -52,6 +53,7 @@ class Ledger:
         self.rows: list[dict[str, str]] = []
         self.new: list[dict[str, str]] = []
         self.warnings: list[str] = []
+        self.reused: list[str] = []
         if path and path.exists():
             with path.open(encoding="utf-8") as f:
                 self.rows = list(csv.DictReader(f))
@@ -76,6 +78,11 @@ class Ledger:
                 if _same(r["value"], value):
                     return r["id"]
                 self.warnings.append(f"{r['id']}（{definition} {period}）は台帳の値 {r['value']} と今回の値 {value} が違う。新しい ID で登録した")
+        # 同じ事実が別のスキルの言い回しで登録済みなら、その ID を使い回す（台帳に同じ事実を二重に載せない）
+        hit = same_fact(self.all_rows(), prefix, value, unit, period, tag, source, definition)
+        if hit:
+            self.reused.append(f"{hit['id']}（{hit['definition']}）を使い回した")
+            return hit["id"]
         rid = self.next_id(prefix)
         self.new.append({
             "id": rid, "value": value, "unit": unit, "definition": definition, "period": period,
@@ -94,6 +101,30 @@ class Ledger:
             if not exists:
                 w.writeheader()
             w.writerows(self.new)
+
+
+def _formula_key(src: str) -> str:
+    """計算式の比較用。空白と記号の書き方の違いを落とす。"""
+    return re.sub(r"\s+", "", src or "").replace("−", "-").replace("／", "/").replace("÷", "/").replace("×", "*")
+
+
+def same_fact(rows: list[dict[str, str]], prefix: str, value: str, unit: str, period: str, tag: str,
+              source: str, definition: str) -> dict[str, str] | None:
+    """別のスキルが別の言い回しで登録した同じ事実を探す。
+    推定: 期間・単位が同じで、計算式（入力 ID と演算）が同じ。値は表示の丸めの差まで許す
+    公開: 期間・単位・値が同じで、定義に会社名と科目名が両方入っている（呼び出し側が definition に入れた語で見る）"""
+    for r in rows:
+        if not r["id"].startswith(prefix + "-") or r["period"] != period or r["unit"] != unit or r["source_tag"] != tag:
+            continue
+        try:
+            close = abs(float(r["value"]) - float(value)) <= 0.051
+        except ValueError:
+            close = r["value"] == value
+        if not close:
+            continue
+        if tag == "推定" and _formula_key(r["source"]) == _formula_key(source) and re.search(r"[A-Z]-\d{3}", source or ""):
+            return r
+    return None
 
 
 def _same(a: str, b: str) -> bool:
@@ -182,7 +213,8 @@ def main() -> int:
     ap.add_argument("--balance", default="avg", choices=["avg", "end"], help="残高を期中平均にするか期末にするか")
     ap.add_argument("--tax-rate", type=float, default=30.0, help="NOPAT の税率 %%（仮置き）")
     ap.add_argument("--tax-rate-id", help="税率の台帳 ID（実効税率を登録済みのとき）")
-    ap.add_argument("--cash-months", type=float, default=1.0, help="事業に要る現金（月商の何か月分か。仮置き）")
+    ap.add_argument("--cash-months", type=float, default=None,
+                    help="渡したときだけ ROIC の投下資本から余剰現金だけを引く（事業に要る現金 = 月商の何か月分か。仮置き）。既定は現金及び預金をすべて引く")
     ap.add_argument("--cash-months-id")
     ap.add_argument("--equity-item", help="ROE の分母に使う項目名（既定: 純資産）")
     ap.add_argument("--compare", help="要因分解する 2 時点 FY2021,FY2025（既定: 最初と最後の年）")
@@ -228,9 +260,15 @@ def main() -> int:
         tax_id = a.tax_rate_id
     else:
         tax_id = led.register("F", r2(a.tax_rate, 1), "%", "NOPAT の計算に使う税率（法定実効税率の近似）", "—", "仮置き", "—", replace_by=replace_by)
+    excess_mode = a.cash_months is not None or bool(a.cash_months_id)
+    cm_id = None
     if a.cash_months_id:
         cm_id = a.cash_months_id
-    else:
+        row = next((r for r in led.all_rows() if r["id"] == cm_id), None)
+        if row is None:
+            sys.exit(f"エラー: --cash-months-id {cm_id} が台帳にありません")
+        a.cash_months = float(row["value"])
+    elif excess_mode:
         cm_id = led.register("F", r2(a.cash_months, 1), "か月", "事業に要る現金（月商の何か月分か。余剰現金の計算用）", "—", "仮置き", "—", replace_by=replace_by)
 
     def reg(fy: str, value: float | None, unit: str, label: str, formula: str, nd: int = 2) -> str | None:
@@ -310,15 +348,19 @@ def main() -> int:
                 e_, d_, c_, s_ = fin.get(y, "equity"), fin.get(y, "debt"), fin.get(y, "cash"), fin.get(y, "sales")
                 if not (e_ and d_ and c_ and s_):
                     return None
+                if not excess_mode:
+                    return e_.v + d_.v - c_.v, f"({e_.id}+{d_.id}-{c_.id})"
                 excess = max(0.0, c_.v - s_.v * a.cash_months / 12)
                 return e_.v + d_.v - excess, f"({e_.id}+{d_.id}-max(0,{c_.id}-{s_.id}×{cm_id}/12))"
             ic = ic_of(fy)
-            R["ic"] = (ic[0], reg(fy, ic[0], u, "投下資本（純資産 + 有利子負債 − 余剰現金、期末）", ic[1], 1))
+            ic_label = "純資産 + 有利子負債 − 余剰現金" if excess_mode else "純資産 + 有利子負債 − 現金及び預金"
+            R["ic"] = (ic[0], reg(fy, ic[0], u, f"投下資本（{ic_label}、期末）", ic[1], 1))
             i = years.index(fy)
             icp = ic_of(years[i - 1]) if (a.balance == "avg" and i > 0) else None
             ic_avg, ic_f = ((ic[0] + icp[0]) / 2, f"avg({icp[1]},{ic[1]})") if icp else ic
             v = nopat / ic_avg * 100
-            R["roic"] = (v, reg(fy, v, "%", f"ROIC（NOPAT ÷ {'期中平均' if icp else '期末'}投下資本。税率・余剰現金は仮置き）", f"{op.id}×(1-{tax_id})/{ic_f}"))
+            roic_note = "税率・余剰現金は仮置き" if excess_mode else "投下資本はネット（現金及び預金をすべて引く）。税率は仮置き"
+            R["roic"] = (v, reg(fy, v, "%", f"ROIC（NOPAT ÷ {'期中平均' if icp else '期末'}投下資本。{roic_note}）", f"{op.id}×(1-{tax_id})/{ic_f}"))
         ocf, capex, dep, div, ma = fin.get(fy, "ocf"), fin.get(fy, "capex"), fin.get(fy, "dep"), fin.get(fy, "div"), fin.get(fy, "ma")
         if ocf and capex:
             v = ocf.v - capex.v
@@ -326,6 +368,12 @@ def main() -> int:
         if capex and dep and dep.v:
             v = capex.v / dep.v
             R["capdep"] = (v, reg(fy, v, "倍", "設備投資額 ÷ 減価償却費", f"{capex.id}/{dep.id}", 3))
+        if dep and s and s.v:
+            v = dep.v / s.v * 100
+            R["dep_s"] = (v, reg(fy, v, "%", "減価償却費 ÷ 売上高", f"{dep.id}/{s.id}"))
+        if capex and s and s.v:
+            v = capex.v / s.v * 100
+            R["capex_s"] = (v, reg(fy, v, "%", "設備投資額 ÷ 売上高", f"{capex.id}/{s.id}"))
         if div and ni and ni.v:
             v = div.v / ni.v * 100
             R["payout"] = (v, reg(fy, v, "%", "配当性向（配当金の支払額 ÷ 純利益。CF ベースの近似）", f"{div.id}/{ni.id}"))
@@ -358,7 +406,8 @@ def main() -> int:
     table("2. 効率性と DuPont 分解（ROE = 純利益率 × 総資産回転率 × 財務レバレッジ）",
           [("npm", "純利益率 %", 2, "%"), ("turn", "総資産回転率 倍", 3, "倍"), ("lev", "財務レバレッジ 倍", 3, "倍"), ("roe", "ROE %", 2, "%")])
     table("3. 安全性", [("eqr", "自己資本比率 %", 1, "%"), ("netdebt", f"ネット有利子負債 {u}", 1, f" {u}"), ("nde", "ネット D/E 倍", 2, "倍")])
-    table("4. キャッシュ・フローと投資", [("fcf", f"フリー CF {u}", 1, f" {u}"), ("capdep", "設備投資 ÷ 減価償却 倍", 2, "倍"), ("payout", "配当性向 %", 1, "%")])
+    table("4. キャッシュ・フローと投資", [("fcf", f"フリー CF {u}", 1, f" {u}"), ("capdep", "設備投資 ÷ 減価償却 倍", 2, "倍"),
+                                       ("capex_s", "設備投資 ÷ 売上高 %", 2, "%"), ("dep_s", "減価償却費 ÷ 売上高 %", 2, "%"), ("payout", "配当性向 %", 1, "%")])
 
     # ------------------------------------------------ 要因分解
     P(f"## 5. 要因分解（{y0} → {y1}）")
@@ -440,8 +489,19 @@ def main() -> int:
             mrow, wrow = [], []
             for y in years:
                 a_, p_, t_ = fin.get(y, "sales", s_), fin.get(y, "seg_profit", s_), fin.get(y, "sales")
-                mrow.append(fmt(p_.v / a_.v * 100) if a_ and p_ else "—")
-                wrow.append(fmt(a_.v / t_.v * 100) if a_ and t_ else "—")
+                # 台帳に載せる年度（--register）は ID を付ける。ID のない値は推移を見るための参考
+                if a_ and p_:
+                    m_ = p_.v / a_.v * 100
+                    mid_ = led.register("F", r2(m_, 2), "%", f"{co} {s_} セグメント利益率", y, "推定", f"{p_.id}/{a_.id}") if y in reg_years else None
+                    mrow.append(cell(m_, mid_, 1, "%"))
+                else:
+                    mrow.append("—")
+                if a_ and t_:
+                    w_ = a_.v / t_.v * 100
+                    wid_ = led.register("F", r2(w_, 2), "%", f"{co} {s_} 売上構成比", y, "推定", f"{a_.id}/{t_.id}") if y in reg_years else None
+                    wrow.append(cell(w_, wid_, 1, "%"))
+                else:
+                    wrow.append("—")
             P(f"| {s_} | 利益率 % | " + " | ".join(mrow) + " |")
             P(f"| {s_} | 構成比 % | " + " | ".join(wrow) + " |")
         P("")
@@ -470,7 +530,8 @@ def main() -> int:
             if r["unit"] in TO_OKU:
                 v = v * TO_OKU[r["unit"]] / TO_OKU[u]
             unit = u if r["unit"] in TO_OKU else r["unit"]
-            rid = led.register("F", r2(v, 1), unit, f"{r['company']} {r['item']}（{r['basis']}）", py, "公開", r["source"])
+            # 定義の書き方は competitor-benchmark と同じにする（同じ事実を二重に登録しないため）
+            rid = led.register("F", r2(v, 1), unit, f"{r['item']}（{r['basis']}、連結）{r['company']}", py, "公開", r["source"])
             comp[r["company"]][r["item"]] = (v, rid, r.get("note", ""))
             basis[r["company"]] = r["basis"]
             if r.get("note"):
@@ -514,13 +575,19 @@ def main() -> int:
     P("## 前提と未確認事項（スクリプトが置いた前提）")
     P("")
     P(f"- NOPAT の税率 {fmt(a.tax_rate)}% [{tax_id}] は仮置き。有報の税効果会計の注記にある法定実効税率で差し替える")
-    P(f"- 余剰現金は、現金及び預金のうち月商 {fmt(a.cash_months)} か月 [{cm_id}] を超える分とした（仮置き）。投下資本と ROIC はこの前提で動く")
+    if excess_mode:
+        P(f"- 投下資本は余剰現金だけを引く定義にした（--cash-months）。余剰現金は、現金及び預金のうち月商 {fmt(a.cash_months)} か月 [{cm_id}] を超える分（仮置き）。CONVENTIONS の共通の定義（現金及び預金をすべて引く）とは違うので、capital-capacity・business-case-model の ROIC と並べるときは注意する")
+    else:
+        P("- 投下資本 = 純資産 + 有利子負債 − 現金及び預金（CONVENTIONS の共通の定義。capital-capacity・business-case-model と同じ）。余剰現金だけを引く定義にするなら --cash-months を渡す")
+    P("- ROIC の分母は期首と期末の平均（--balance avg）。capital-capacity の全社 ROIC は期末の投下資本で割るので、同じ年でも少しずれる")
     P("- 純資産を ROE の分母にした（非支配株主持分などを含む）。会社の開示する ROE と少しずれることがある")
     P("- 配当性向は CF 計算書の配当金の支払額で近似した。会社の開示値（1 株配当 ÷ 1 株利益）とは時期がずれる")
     for n in sorted(set(notes)):
         P(f"- {n}")
     for wmsg in led.warnings:
         P(f"- {wmsg}")
+    for rmsg in led.reused:
+        P(f"- 台帳にある同じ事実を使った: {rmsg}")
     P("- 比率の変化の理由（価格、数量、コスト、為替、買収、組み替え）はこの表からは分からない。要因の表を起点に、有報の MD&A と説明会資料で確かめる")
     P("")
     text = "\n".join(out)

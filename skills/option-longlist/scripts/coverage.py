@@ -87,7 +87,7 @@ def row_index(t: str, m: str, p: str) -> int | None:
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("options_md")
-    ap.add_argument("--gaps", help="03-gap-bridge.md。G-xxx を拾い、打ち手のないギャップを出す")
+    ap.add_argument("--gaps", help="03-gap-bridge.md。04-options.md の「埋めるギャップ」の表の G-xxx が、ここにあるかと、打ち手があるかを見る")
     ap.add_argument("--write", action="store_true")
     args = ap.parse_args()
 
@@ -159,10 +159,19 @@ def main() -> int:
         L.append("- レーン 2（中計の外側）の打ち手がない。M&A、市場の選び直し、撤退も検討したか確かめる")
     if lanes["1"] == 0:
         L.append("- レーン 1（中計に則る）の打ち手がない。中計の重点施策を拾えているか確かめる")
+    # 埋めるギャップは 04-options.md の「埋めるギャップ」の表の先頭の列で決める。
+    # 03-gap-bridge.md には必要年率・pt・レバーの割り当てなどの G- もあるので、全部を拾うと誤検出になる
+    declared = sorted({g for r in tables_under(text, "埋めるギャップ") for g in re.findall(r"G-\d{3,}", next(iter(r.values()), ""))})
     if args.gaps:
         gtext = Path(args.gaps).read_text(encoding="utf-8")
         all_gaps = sorted(set(re.findall(r"G-\d{3,}", gtext)))
-        miss = [g for g in all_gaps if g not in covered_gaps]
+        not_in_bridge = [g for g in declared if g not in all_gaps]
+        if not_in_bridge:
+            problems += [f"「埋めるギャップ」の {g} が 03-gap-bridge.md にない" for g in not_in_bridge]
+        targets = declared or all_gaps
+        if not declared:
+            L.append("- 「埋めるギャップ」の表がないので、03-gap-bridge.md の G- をすべて対象にした（必要年率などの行も入る）")
+        miss = [g for g in targets if g not in covered_gaps]
         unknown = sorted(g for g in covered_gaps if g not in all_gaps)
         if miss:
             L.append(f"- 打ち手が 1 つもないギャップ: {', '.join(miss)}")

@@ -66,15 +66,23 @@ Intake questions: [references/intake.md](references/intake.md).
    python3 skills/capital-capacity/scripts/capacity.py \
        --initiatives <case>/05-initiatives.csv --ledger <case>/facts/facts.csv \
        --inputs <case>/06-capital-inputs.csv --financials <case>/facts/financials.csv --fy FY2025 \
-       --out-md <case>/06-capital.tables.md --append-ledger --today YYYY-MM-DD
+       --out-md <scratch>/06-capital.tables.md --append-ledger --today YYYY-MM-DD
    ```
    Output: (a) investment total vs capacity by source with surplus/shortfall, (b) yearly table of
    investment, OCF, dividends, asset sales, net debt, equity, net D/E and breach flag,
    (c) ROIC per initiative and total vs WACC, company ROIC before/after, (d) open items.
    C-xxx rows are upserted by definition + period (re-runs do not duplicate).
+   When a shortfall sends you back to the options, run each plan with `--label 初回案` / `--label 見直し案`:
+   the plan-dependent rows (investment total, surplus/shortfall, max net D/E, incremental ROIC, ROIC after)
+   carry the label in their definition, so the first plan's C- rows survive and decisions.md can cite both.
+   Funding-side rows (OCF capacity, cash, borrowing, asset sales, total) do not depend on the plan and stay one row.
+   The total and the surplus/shortfall rows write their formula with C- IDs.
+   Item names: the script reads the 有報 names company-financials writes (and the IFRS names); override with
+   `--fin-map`. Company ROIC uses CONVENTIONS 共通の定義 (純資産 + 有利子負債 − 現金及び預金, period-end).
    `--count-initiative-cf` adds initiatives' after-tax operating profit to OCF; default is off
    (conservative). State which one you used.
-4. **Assemble `06-capital.md`** from `templates/capital.md`, pasting the tables.
+4. **Assemble `06-capital.md`** from `templates/capital.md`, pasting the tables. Keep `--out-md` outside the
+   case folder (a scratch dir) so the same numbers do not appear twice in the case.
 5. **STOP — hand the result to the human (○ review).** Present: surplus/shortfall [C-xxx], the
    tightest year and its net D/E, incremental ROIC vs WACC. If short or if any year breaches the
    limit, list the options without choosing:

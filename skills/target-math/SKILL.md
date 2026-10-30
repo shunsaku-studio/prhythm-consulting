@@ -113,6 +113,8 @@ python3 skills/target-math/scripts/target_math.py \
 - Without `--append` the script prints the rows it would add (stderr) and writes nothing to the ledger
 - `--xxx-id` is checked against the ledger row's unit and definition (e.g. `--roe-id` must point to a row whose definition contains "ROE"); the notes list every ID the script read
 - Re-running is safe: rows with the same definition, period, unit and value reuse their ID. If the value differs, a new ID is registered and the note says so
+- The day-1 run registers base revenue, history, equity and net income as 公開 F- rows. company-financials later reuses those IDs (it matches period, unit, value and item name), so the `--financials` re-run finds the same IDs and adds no rows. The base-year value in `--history` is the same fact as `--base` and gets the same ID
+- Pass `--today` (the case date) and `--replace-by` (a date after the case's final meeting) so 仮置き deadlines do not expire inside the case
 - Paste the Markdown output into template sections 3–6; do not retype numbers
 
 Check (お題A): 2,000 → 5,000 gives 5 years 20.1%, 7 years 14.0%, 10 years 9.6%; with 5% market growth the 5-year reach is about 2,553.

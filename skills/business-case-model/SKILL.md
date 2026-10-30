@@ -70,8 +70,8 @@ da_rate maint_capex_rate dep_life nwc_rate tax_rate interest_rate payout_ratio w
 Every row needs a ledger ID whose value equals the row's value. Amounts in 億円; rates in `%`
 (5.0, not 0.05). A value of `—` stops the script and lists what is missing.
 
-`05-initiatives.csv` (`id,initiative,year,revenue,investment,unit,confidence`): `year` may be
-`2027` or `FY2027`; `unit` 億円 or 百万円; `revenue` is incremental to the status quo;
+`05-initiatives.csv` (`id,initiative,year,revenue,investment,unit,confidence`): `year` is
+`FY2027` (initiative-sizing writes it that way; a bare `2027` is still read); `unit` 億円 or 百万円; `revenue` is incremental to the status quo;
 `investment` is the cash spent in that year (capex or acquisition price).
 
 ## Steps
@@ -107,11 +107,12 @@ Every row needs a ledger ID whose value equals the row's value. Amounts in 億�
 6. Write the ledger rows once the numbers look right:
 
    ```bash
-   python3 skills/business-case-model/scripts/build_model.py --case cases/hokushin --ledger-write
+   python3 skills/business-case-model/scripts/build_model.py --case cases/hokushin --ledger-write --today YYYY-MM-DD
    ```
 
-   It upserts headline results as `F-` rows (`推定`, source lists the input IDs). Re-running
-   updates the same IDs; it never mints new ones for the same definition and period.
+   It upserts headline results as `F-` rows (`推定`, source lists the input IDs), including the peak net
+   D/E and the lowest cash balance over the plan years (the flags the template asks IDs for). Re-running
+   updates the same IDs; it never mints new ones for the same definition and period. Pass `--today`.
 7. Write `<case>/model/model-summary.md` from `templates/model-summary.md`: the body (yearly table with
    IDs), the flags the script printed, and 前提と未確認事項.
 8. **Stop point 2 (human).** If cash goes negative, net D/E breaks the discipline, or ROIC stays

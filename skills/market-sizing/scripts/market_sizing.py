@@ -35,6 +35,11 @@ LEDGER_COLS = ["id", "value", "unit", "definition", "period", "source_tag", "sou
 ID_RE = re.compile(r"[TQAFSGOICKD]-\d{3,}")
 
 
+def _formula_key(src: str) -> str:
+    """計算式の比較用。空白と記号の書き方の違いを落とす。"""
+    return re.sub(r"\s+", "", src or "").replace("−", "-").replace("／", "/").replace("÷", "/").replace("×", "*")
+
+
 class Ledger:
     """facts.csv を読み、追記する行を溜める。接頭辞ごとに使われていない最小の番号から振る。"""
 
@@ -44,6 +49,7 @@ class Ledger:
         self.rows: list[dict[str, str]] = []
         self.new_rows: list[dict[str, str]] = []
         self.warnings: list[str] = []
+        self.reused: list[str] = []
         if path and path.exists():
             with path.open(encoding="utf-8") as f:
                 self.rows = list(csv.DictReader(f))
@@ -98,6 +104,18 @@ class Ledger:
                 self.warnings.append(
                     f"{r['id']}（{definition} {period}）の値 {r['value']} が今回の計算 {vtext} と違う。"
                     f"新しい行を足すので、古い行を参照している成果物を確認すること")
+        if source_tag == "推定":
+            # 同じ計算式（入力 ID と演算）の行が別のスキルから登録済みなら使い回す（同じ事実を二重に載せない）
+            key = _formula_key(source)
+            for r in self.rows + self.new_rows:
+                if (r["id"].startswith(prefix + "-") and r["source_tag"] == "推定" and r["period"] == period
+                        and r["unit"] == unit and _formula_key(r["source"]) == key and re.search(r"[A-Z]-\d{3}", key)):
+                    try:
+                        if abs(float(r["value"]) - float(vtext)) <= 0.051:
+                            self.reused.append(f"{r['id']}（{r['definition']}）")
+                            return r["id"]
+                    except ValueError:
+                        pass
         rid = self._next(prefix)
         self.new_rows.append({
             "id": rid, "value": vtext, "unit": unit, "definition": definition, "period": period,
@@ -284,8 +302,9 @@ def main() -> int:
             shid = L.add("F", sh, "%", f"自社の推定シェア（{name}、対象市場の基準ケース）", args.base_year, "推定",
                          f"{cv.ref()} / ({sz.ref()} × {sc_ids[1]})", [x for x in (cv.id, sz.id, sc_ids[1]) if x])
             share_cell = f"{pct(sh)} [{shid}]"
-        sc_cell = "/".join(f"{x:.0%}" for x in sc)
-        out.append(f"| {name} | {oku(sz.value)}{tag(sz.id)} | {sc_cell}（{', '.join(sc_ids)}） | "
+        # 割合の値の直後に ID を付ける（number-audit が値と台帳を突き合わせられるように）
+        sc_cell = " / ".join(f"{x:.0%} [{sid}]" for x, sid in zip(sc, sc_ids))
+        out.append(f"| {name} | {oku(sz.value)}{tag(sz.id)} | {sc_cell} | "
                    f"{pct(gl.value)}{tag(gl.id)} / {pct(gb.value)}{tag(gb.id)} / {pct(gh.value)}{tag(gh.id)} | "
                    f"{oku(res[0])} [{ids[0]}] | {oku(res[1])} [{ids[1]}] | {oku(res[2])} [{ids[2]}] | {share_cell} |")
     if size:
@@ -351,7 +370,7 @@ def main() -> int:
     out += ["### 前提と未確認事項", ""]
     out.append("- 業界団体の市場の定義は、自社のセグメントの売上の定義と一致しない（どの製品・地域・取引段階を含むか）")
     out.append("- 業界見通しは過去に下方修正が続いたことがある。改定履歴を確かめる")
-    for x in notes + L.warnings:
+    for x in notes + L.warnings + [f"台帳にある同じ事実を使った: {u}" for u in L.reused]:
         out.append(f"- {x}")
     out.append("")
 

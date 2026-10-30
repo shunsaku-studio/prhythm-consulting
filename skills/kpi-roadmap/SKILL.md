@@ -63,8 +63,9 @@ Copy the templates into `<case>/roadmap/`.
 - `kpi-targets.csv` — `id,kpi,fiscal_year,value,unit,source_tag,source`. One row per KPI × year.
   Leave `id` blank and run with `--assign-ids` to get `K-` IDs and ledger rows (upserted by
   definition `<kpi>の目標` and period). Values from the model are `推定` with the model's `F-` ID
-  in `source`; a threshold someone chose is `仮置き` until the gate decision fixes it.
-- `arrows.csv` — `initiative_id,initiative,phase,start,end` (FY2027 or 2027). One row per phase.
+  in `source`; a threshold someone chose is `仮置き` until the gate decision fixes it. A 仮置き row takes its
+  `replace_by` from an optional `replace_by` column, else `--replace-by`, else `--today` + 14 days.
+- `arrows.csv` — `initiative_id,initiative,phase,start,end` (write `FY2027`, CONVENTIONS 共通の定義; a bare `2027` is still read). One row per phase.
 - `gates.csv` — `gate,date,initiative_id,kpi_id,metric,comparator,threshold,unit,data_source,go_action,exit_criteria,decision_id`.
   Gate names are `G1`, `G2`… (labels, not ledger IDs). `threshold` must equal the ledger value of
   `kpi_id`. `decision_id` stays blank until the human decides.
@@ -83,7 +84,7 @@ Copy the templates into `<case>/roadmap/`.
 5. Run:
 
    ```bash
-   python3 skills/kpi-roadmap/scripts/render_roadmap.py --case cases/hokushin --assign-ids
+   python3 skills/kpi-roadmap/scripts/render_roadmap.py --case cases/hokushin --assign-ids --today YYYY-MM-DD
    ```
 
    It writes between `<!-- roadmap:begin -->` and `<!-- roadmap:end -->` in

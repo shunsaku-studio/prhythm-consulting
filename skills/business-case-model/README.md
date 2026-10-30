@@ -78,8 +78,7 @@
 
 ## 具体例
 
-<!-- EXAMPLE: お題A の実行結果で埋める -->
-お題A（北辰工業）で、施策を載せた FY2030 の売上・ROIC・現預金と、`cases/hokushin/model/` の xlsx を示す。
+ベースケースの FY2030 は、連結売上 3,809.2 億円 [F-468]、営業利益率 6.7% [F-472]、ROIC 7.7% [F-473]。ネット D/E は FY2029 に最大 0.61倍 [F-494] で上限を超え、現預金は最小 -503.8 億円 [F-495] になる。xlsx の calc シートの数式 152 件は LibreOffice の再計算と一致した。全体は [cases/hokushin/model/model-summary.md](../../cases/hokushin/model/model-summary.md)。
 
 ## 先輩が聞くとよい問い
 

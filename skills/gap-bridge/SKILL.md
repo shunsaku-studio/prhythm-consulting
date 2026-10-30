@@ -129,7 +129,9 @@ point it outside the case folder (e.g. a scratch dir) so numbers do not appear t
 
 Options: `--target-seg 名前=値[@ID]` (human-set segment targets), `--lever 名前:セグメント=値`
 (lever on one segment), `--share-redflag 5.0`, `--share-avg 0.8`, `--unit 億円`.
-The IDs above are examples; use the IDs in the case ledger.
+The IDs above are examples; use the IDs in the case ledger. If target-math already registered the
+required CAGR for the same target and period (T-), the script reuses that ID instead of a new G- row;
+other 推定 rows with the same formula are reused the same way.
 
 ## Rules
 

@@ -9,3 +9,6 @@ docs-site/.generated/
 docs-site/.vitepress/dist/
 docs-site/.vitepress/cache/
 docs-site/node_modules/
+
+# Python
+__pycache__/

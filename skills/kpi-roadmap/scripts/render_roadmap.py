@@ -4,7 +4,7 @@
 読むもの（既定は <case>/roadmap/ の下）:
   kpi-targets.csv  id,kpi,fiscal_year,value,unit,source_tag,source
                    id が空の行は --assign-ids で K- の番号を振り、台帳に載せる
-  arrows.csv       initiative_id,initiative,phase,start,end   （start/end は FY2027 か 2027）
+  arrows.csv       initiative_id,initiative,phase,start,end   （start/end は FY2027 の形。2027 も読む）
   gates.csv        gate,date,initiative_id,kpi_id,metric,comparator,threshold,unit,data_source,
                    go_action,exit_criteria,decision_id
   <case>/facts/facts.csv
@@ -76,6 +76,8 @@ def main() -> int:
     ap.add_argument("--out", help="既定: <case>/08-kpi-roadmap.md（印の間だけ書き換える）")
     ap.add_argument("--assign-ids", action="store_true", help="id が空の KPI 目標に K- を振り、台帳に載せる")
     ap.add_argument("--fy-start-month", type=int, default=4, help="期首の月（既定 4 = 4 月始まり）")
+    ap.add_argument("--today", default=dt.date.today().isoformat(), help="台帳の retrieved_at に書く日付（案件の日付）")
+    ap.add_argument("--replace-by", help="仮置きの閾値の差し替え期限（既定: --today + 14 日）。kpi-targets.csv に replace_by 列があればそちらを優先")
     a = ap.parse_args()
 
     case = Path(a.case)
@@ -94,7 +96,8 @@ def main() -> int:
             print(f"エラー: {ledger_p} がないので K- を振れません", file=sys.stderr)
             return 2
         used = set(by_id)
-        today = dt.date.today().isoformat()
+        today = a.today
+        default_rb = a.replace_by or (dt.date.fromisoformat(a.today) + dt.timedelta(days=14)).isoformat()
         for t in targets:
             if (t.get("id") or "").strip():
                 continue
@@ -102,7 +105,8 @@ def main() -> int:
             hit = next((r for r in ledger if r["definition"] == dfn and r["period"] == period), None)
             if hit:
                 t["id"] = hit["id"]
-                hit.update({"value": t["value"], "unit": t["unit"], "source_tag": t["source_tag"], "source": t["source"]})
+                hit.update({"value": t["value"], "unit": t["unit"], "source_tag": t["source_tag"], "source": t["source"],
+                            "replace_by": ((t.get("replace_by") or "").strip() or default_rb) if t["source_tag"] == "仮置き" else ""})
             else:
                 t["id"] = next_free("K", used)
                 used.add(t["id"])
@@ -111,7 +115,7 @@ def main() -> int:
                             "source_tag": t["source_tag"], "source": t["source"], "retrieved_at": today,
                             "confidentiality": "公開"})
                 if t["source_tag"] == "仮置き":
-                    row["replace_by"] = (dt.date.today() + dt.timedelta(days=14)).isoformat()
+                    row["replace_by"] = (t.get("replace_by") or "").strip() or default_rb
                 ledger.append(row)
                 by_id[t["id"]] = row
         with ledger_p.open("w", encoding="utf-8", newline="") as f:

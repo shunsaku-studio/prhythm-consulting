@@ -344,6 +344,7 @@ def main() -> int:
     ap.add_argument("--exclude-confidence", default="", help="business-case-model と同じ指定にする")
     ap.add_argument("--target-id", help="売上目標の ID（例: T-001）。台帳の値と比べる")
     ap.add_argument("--ledger-write", action="store_true", help="上振れ・下振れの主要な結果を台帳に追記・更新する")
+    ap.add_argument("--today", default=dt.date.today().isoformat(), help="台帳の retrieved_at に書く日付（案件の日付）")
     a = ap.parse_args()
 
     case = Path(a.case)
@@ -379,7 +380,7 @@ def main() -> int:
         in_ids = [r["id"] for r in read_csv(Path(a.inputs) if a.inputs else case / "model" / "inputs.csv")
                   if r.get("id") in by_id]
         src = f"sensitivity.py（入力: {', '.join(in_ids)}; 05-initiatives.csv; sensitivity-ranges.csv）"
-        today = dt.date.today().isoformat()
+        today = a.today
         for name in ("上振れ", "下振れ"):
             for k, label, unit, kind in METRICS:
                 v = fmt(metric(scen[name], k, kind, years), unit).replace(",", "")
@@ -400,6 +401,32 @@ def main() -> int:
                     ledger.append(row)
                     ids[(name, k)] = nid
                     log.append(f"追加 {nid} {definition} = {v}{unit}")
+        # 目標との差（FY 最終年の売上 − 目標）も台帳に載せる。デッキで「目標に x 億円届かない」と書けるように
+        t_row = by_id.get(a.target_id) if a.target_id else None
+        if t_row and num(t_row["value"]) is not None:
+            tv0 = num(t_row["value"]) * TO_OKU.get(t_row["unit"], 1.0)
+            base_rev_def = f"{ITEM_LABEL['rev']}（business-case-model ベースケース）"
+            base_rev = next((r for r in ledger if r["definition"] == base_rev_def and r["period"] == f"FY{years[-1]}"), None)
+            for name in ("ベース", "上振れ", "下振れ"):
+                rev_id = base_rev["id"] if name == "ベース" and base_rev else ids.get((name, "rev"))
+                v = fmt(metric(scen[name], "rev", "end", years) - tv0, "億円").replace(",", "")
+                definition = f"FY{years[-1]} の連結売上高と目標 {a.target_id} の差（scenario-sensitivity {name}）"
+                gsrc = f"{rev_id} − {a.target_id}" if rev_id else f"sensitivity.py − {a.target_id}"
+                hit = next((r for r in ledger if r["definition"] == definition and r["period"] == f"FY{years[-1]}"), None)
+                if hit:
+                    if hit["value"] != v or hit["source"] != gsrc:
+                        hit.update({"value": v, "source": gsrc, "retrieved_at": today})
+                        log.append(f"更新 {hit['id']} {definition} = {v}億円")
+                    ids[(name, "target_gap")] = hit["id"]
+                else:
+                    nid = next_free("F", used)
+                    used.add(nid)
+                    row = {f: "" for f in fields}
+                    row.update({"id": nid, "value": v, "unit": "億円", "definition": definition, "period": f"FY{years[-1]}",
+                                "source_tag": "推定", "source": gsrc, "retrieved_at": today, "confidentiality": "公開"})
+                    ledger.append(row)
+                    ids[(name, "target_gap")] = nid
+                    log.append(f"追加 {nid} {definition} = {v}億円")
         with ledger_p.open("w", encoding="utf-8", newline="") as f:
             w = csv.DictWriter(f, fieldnames=fields)
             w.writeheader()
@@ -437,8 +464,12 @@ def main() -> int:
         if tv is None:
             notes.append(f"{a.target_id} が台帳にないか値が —。目標との差は出していない")
         else:
-            L.append(f"| 目標 {a.target_id} との差（FY{years[-1]} 売上） | 億円 | "
-                     + " | ".join(fmt(metric(scen[n], "rev", "end", years) - tv, "億円") for n in ("ベース", "上振れ", "下振れ")) + " |")
+            gcells = []
+            for n in ("ベース", "上振れ", "下振れ"):
+                gv = fmt(metric(scen[n], "rev", "end", years) - tv, "億円")
+                gid = ids.get((n, "target_gap"))
+                gcells.append(f"{gv} [{gid}]" if gid else gv)
+            L.append(f"| 目標 {a.target_id} との差（FY{years[-1]} 売上） | 億円 | " + " | ".join(gcells) + " |")
     L.append("")
     L.append("## 振った変数と幅（出典つき）\n")
     L.append("| 変数 | 単位 | 下振れ | ベース | 上振れ | シナリオ | 出典タグ | 根拠 |")

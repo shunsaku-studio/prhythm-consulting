@@ -49,8 +49,7 @@
 
 ## 具体例
 
-<!-- EXAMPLE: お題A の実行結果で埋める -->
-北辰工業の 04-options.md から、網羅グリッドと空欄の一覧、レーン別の打ち手数を抜粋する（[cases/hokushin/](../../cases/hokushin/)）。
+網羅グリッド 18 マスに 16 件の打ち手（レーン1 が 8 件、レーン2 が 8 件）を置き、4 マスは先輩が「該当なし」と判断した。初回は coverage.py が 03-gap-bridge.md の必要年率や pt の G- まで「打ち手のないギャップ」と数えたので、「埋めるギャップ」の表の G- だけを見るように直した。全体は [cases/hokushin/04-options.md](../../cases/hokushin/04-options.md)。
 
 ## 先輩が聞くとよい問い
 

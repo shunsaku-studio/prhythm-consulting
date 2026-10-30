@@ -175,7 +175,7 @@ def parse_num(s: str) -> float | None:
 def parse_year(s: str) -> int:
     m = re.search(r"(\d{4})", s or "")
     if not m:
-        fail(f"年度を読めません: {s!r}（2027 か FY2027 の形で書く）")
+        fail(f"年度を読めません: {s!r}（FY2027 の形で書く。2027 も読む）")
     return int(m.group(1))
 
 
@@ -286,8 +286,8 @@ def next_free(prefix: str, used: set[str]) -> str:
     return f"{prefix}-{n:03d}"
 
 
-def headline_rows(res: dict, years: list[int], label: str, src: str) -> list[dict]:
-    today = dt.date.today().isoformat()
+def headline_rows(res: dict, years: list[int], label: str, src: str, today: str | None = None) -> list[dict]:
+    today = today or dt.date.today().isoformat()
     y_end = years[-1]
     rows = []
     for item, kind in HEADLINES:
@@ -305,6 +305,16 @@ def headline_rows(res: dict, years: list[int], label: str, src: str) -> list[dic
             "period": period, "source_tag": "推定", "source": src, "retrieved_at": today,
             "confidentiality": "公開", "replace_by": "",
             "_item": item, "_kind": kind,
+        })
+    # スクリプトが出す旗（ネット D/E の最大、現預金の最小）も台帳に載せる。最終年度だけでは山が見えないため
+    for item, kind, pick in (("net_de", "max", max), ("cash", "min", min)):
+        y_pick = pick(years[1:], key=lambda y: res[y][item])
+        word = "最大" if kind == "max" else "最小"
+        rows.append({
+            "id": "", "value": display(item, res[y_pick][item]), "unit": ITEM_UNIT[item],
+            "definition": f"{ITEM_LABEL[item]}の期間中の{word}（business-case-model {label}、FY{y_pick}）",
+            "period": f"FY{years[1]}-FY{y_end}", "source_tag": "推定", "source": src, "retrieved_at": today,
+            "confidentiality": "公開", "replace_by": "", "_item": item, "_kind": kind,
         })
     return rows
 
@@ -536,6 +546,7 @@ def main() -> int:
     ap.add_argument("--exclude-confidence", default="", help="除く確度（カンマ区切り。例: 低）")
     ap.add_argument("--label", default="ベースケース", help="台帳の定義に入れるケース名")
     ap.add_argument("--ledger-write", action="store_true", help="主要な結果を台帳に追記・更新する")
+    ap.add_argument("--today", default=dt.date.today().isoformat(), help="台帳の retrieved_at に書く日付（案件の日付）")
     a = ap.parse_args()
 
     case = Path(a.case)
@@ -558,7 +569,7 @@ def main() -> int:
     in_ids = [r["id"] for r in in_rows if r.get("id") and r["id"] in ledger_ids]
     init_ids = [x["id"] for x in inits if x["id"] in ledger_ids]
     src = f"build_model.py（入力: {', '.join(in_ids + init_ids) or '—'}; 05-initiatives.csv）"
-    heads = headline_rows(res, years, a.label, src)
+    heads = headline_rows(res, years, a.label, src, a.today)
     if a.ledger_write:
         if not fields:
             fail(f"{ledger_p} がないので台帳に書けません")
@@ -588,6 +599,10 @@ def main() -> int:
                 rid = head_id.get((k, "end"), "") if y == years[-1] else ""
                 w.writerow([rid if a.ledger_write else "", f"FY{y}", label, display(k, v), unit,
                             "実績" if y == years[0] else a.label])
+        for h in heads:
+            if h["_kind"] in ("max", "min"):
+                w.writerow([h["id"] if a.ledger_write else "", h["period"], h["definition"].split("（business-case-model")[0],
+                            h["value"], h["unit"], a.label])
         for k, kind in HEADLINES:
             if kind == "sum":
                 v = sum(res[y][k] for y in years[1:])

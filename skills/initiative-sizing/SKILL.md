@@ -69,13 +69,17 @@ Intake questions: [references/intake.md](references/intake.md).
    python3 skills/initiative-sizing/scripts/sizing.py \
        --ledger <case>/facts/facts.csv --inputs <case>/05-initiative-inputs.csv \
        --from FY2026 --to FY2030 \
-       --out-csv <case>/05-initiatives.csv --out-md <case>/05-initiatives.tables.md \
+       --out-csv <case>/05-initiatives.csv --out-md <scratch>/05-initiatives.tables.md \
        --append-ledger --today YYYY-MM-DD
    ```
    It writes `05-initiatives.csv`, Markdown tables (cards, yearly revenue, yearly investment,
    formulas, open items) and one ledger row per I-xxx (final-year incremental revenue, `推定`, formula
    citing input IDs). Re-running updates the same I-xxx rows; it does not duplicate them.
    Exit code 2 = input error (missing ID, wrong unit); fix the ledger, do not bypass.
+   Keep `--out-md` outside the case folder (a scratch dir); paste its tables into `05-initiatives.md`.
+   If capital-capacity sends you back (shortfall), write the revised set of cards into the input CSV and
+   re-run: `05-initiatives.csv` then holds only the plan being pursued, and the dropped cards' I- rows stay in
+   the ledger (list them in `05-initiatives.md` under 初回案から外したカード).
 6. **STOP — the human sets confidence.** Ask the senior/manager to choose 高/中/低 per card, with a
    one-line reason. Write it into the input CSV and re-run. Record as D-xxx in `decisions.md`.
    Never pick confidence yourself.

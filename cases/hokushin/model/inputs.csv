@@ -1,0 +1,17 @@
+id,label,value,unit,source_tag,key
+F-001,基準年の連結売上高,2000,億円,公開,base_revenue
+F-227,基準年の連結営業利益,122.2,億円,公開,base_op
+F-011,基準年末の純資産,1150,億円,公開,base_equity
+F-230,基準年末の有利子負債（期間中は一定）,400,億円,公開,base_debt
+F-229,基準年末の現金及び預金,320,億円,公開,base_cash
+S-006,成り行きの売上成長率（市場成長の加重平均、gap-bridge）,4.9,%,推定,base_growth
+F-266,成り行き事業の営業利益率（FY2025 の実績のまま）,6.11,%,推定,base_margin
+F-459,施策売上の営業利益率（capital-capacity と同じ仮置き）,8.0,%,仮置き,init_margin
+F-279,成り行き売上に対する減価償却費の比率（FY2025）,4.50,%,推定,da_rate
+F-279,成り行き売上に対する維持更新投資の比率（減価償却費と同じと置く。capital-capacity と同じ前提）,4.50,%,推定,maint_capex_rate
+F-466,施策投資の償却年数,10,年,仮置き,dep_life
+F-460,売上増加額に対する運転資本の増加率（capital-capacity と同じ仮置き）,15.0,%,仮置き,nwc_rate
+F-248,実効税率（financial-analysis と同じ仮置き）,30.0,%,仮置き,tax_rate
+F-467,有利子負債の平均金利,1.0,%,仮置き,interest_rate
+F-015,配当性向,35,%,公開,payout_ratio
+F-054,WACC,6.0,%,公開,wacc

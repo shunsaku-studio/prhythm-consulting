@@ -72,6 +72,8 @@ F-031,5.0,%,対象市場の年成長率,FY2025-FY2030,仮置き,—,2026-10-22,�
 
 `[F-012]` のように角括弧で囲んだ ID だけが number-audit の点検対象になる。本文で ID に言及するだけなら括弧を付けない。
 
+Q・A・O・D は数字を持たないので台帳に載せない。本文では括弧なしで書くのが基本である。角括弧で囲んでもよいが、そのときは number-audit が案件内の Markdown にその ID の定義の行（見出し、表の先頭のセル、箇条書きの先頭。例: `decisions.md` の `## D-003`、`04-options.md` の表の `| O-007 |`）を探し、なければエラーにする。`01-issue-tree.md` の A- は表の 4 列目にあり定義の行にならないので、角括弧で囲まない。
+
 ## 4. 計算は会話の中でしない（設計原則3）
 
 年率換算、ブリッジ、感応度、資本の対照は、各スキルの `scripts/` の Python スクリプトで計算する。
@@ -213,7 +215,7 @@ workflows:              # 使うお題
 | `06-capital.md` | capital-capacity | business-case-model, storyline | 投資総額と調達余力の対照（C） |
 | `model/` | business-case-model | scenario-sensitivity, kpi-roadmap | `inputs.csv`（`id,label,value,unit,source_tag`）、計算結果の CSV、数式入りの `business-case.xlsx` |
 
-スクリプトが台帳に行を足すときは、接頭辞ごとに使われていない最小の番号から振る。
+スクリプトが台帳に行を足すときは、接頭辞ごとに使われていない最小の番号から振る。どのスクリプトの出力でもない数字（開示された WACC、工業会の市場規模、議論のための仮置きなど）は、`skills/number-audit/scripts/add_fact.py` で台帳に足す。CSV を手で編集しない。
 
 ### 共通の定義
 

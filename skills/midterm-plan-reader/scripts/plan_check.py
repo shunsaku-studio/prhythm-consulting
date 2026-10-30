@@ -6,6 +6,8 @@
   - unit: 億円 / 百万円 / % / 倍 など（% の指標は差を pt で出す）
   - ma_included: 目標に含まれる M&A の上積み（同じ単位。なければ空）
   - 分からない値は — か空のまま（計算せずに — を出す）
+  - 台帳にある値は「2000@F-001」か「@F-001」と書くと、その ID を使う（同じ事実を二重に登録しない）。
+    書かなくても、期間・単位・値が同じで定義に指標名が入っている「公開」の行があれば使い回す
 
 出力:
   Markdown の表（目標・実績・達成率・進捗率・オーガニック目標との差）と、台帳に追記する行
@@ -37,6 +39,7 @@ class Ledger:
         self.today = today
         self.rows: list[dict[str, str]] = []
         self.new: list[dict[str, str]] = []
+        self.reused: list[str] = []
         if path and path.exists():
             with path.open(encoding="utf-8") as f:
                 self.rows = list(csv.DictReader(f))
@@ -48,10 +51,22 @@ class Ledger:
             n += 1
         return f"{prefix}-{n:03d}"
 
-    def register(self, value: str, unit: str, definition: str, period: str, tag: str, source: str) -> str:
+    def get(self, rid: str) -> dict[str, str] | None:
+        return next((r for r in self.rows + self.new if r["id"] == rid), None)
+
+    def register(self, value: str, unit: str, definition: str, period: str, tag: str, source: str,
+                 keywords: tuple[str, ...] = ()) -> str:
         for r in self.rows + self.new:
             if (r["definition"], r["period"], r["unit"], r["value"]) == (definition, period, unit, value) and r["id"].startswith("F-"):
                 return r["id"]
+        # 有報の値など、同じ事実が別の言い回しで「公開」として登録済みなら使い回す（二重に登録しない）
+        if tag == "公開" and keywords:
+            for r in self.rows + self.new:
+                if (r["id"].startswith("F-") and r["source_tag"] == "公開" and r["period"] == period
+                        and r["unit"] == unit and num(r["value"]) == num(value)
+                        and all(k in r["definition"] for k in keywords)):
+                    self.reused.append(f"{r['id']}（{r['definition']}、{period}）")
+                    return r["id"]
         rid = self.next_id("F")
         self.new.append({"id": rid, "value": value, "unit": unit, "definition": definition, "period": period,
                          "source_tag": tag, "source": source, "retrieved_at": self.today,
@@ -80,6 +95,24 @@ def num(s: str | None) -> float | None:
         return float(s)
     except ValueError:
         return None
+
+
+def cell_val(text: str | None, led: "Ledger", unit: str) -> tuple[float | None, str | None]:
+    """CSV のセルを (値, 台帳 ID) にする。「2000」「2000@F-001」「@F-001」の 3 通り。
+    ID を書いたセルは台帳の値を使い（値も書いたなら一致を確かめる）、新しい行を作らない。"""
+    text = (text or "").strip()
+    if "@" not in text:
+        return num(text), None
+    v_text, rid = (x.strip() for x in text.split("@", 1))
+    row = led.get(rid)
+    if row is None:
+        sys.exit(f"エラー: {rid} が台帳にありません")
+    if row["unit"] != unit:
+        sys.exit(f"エラー: {rid} の単位 {row['unit']} が CSV の単位 {unit} と違います")
+    lv = num(row["value"])
+    if v_text and lv is not None and num(v_text) is not None and abs(num(v_text) - lv) > 1e-9:
+        sys.exit(f"エラー: CSV の値 {v_text} が台帳 {rid} の値 {row['value']} と違います")
+    return lv, rid
 
 
 def raw(x: float) -> str:
@@ -117,12 +150,14 @@ def main() -> int:
         pct = u in ("%", "％")
         du = "pt" if pct else u
         by, ty = r["base_year"].strip(), r["target_year"].strip()
-        b, t, ac, ma = num(r["base_value"]), num(r["target_value"]), num(r["actual_value"]), num(r.get("ma_included"))
+        (b, b_id), (t, t_id), (ac, ac_id), (ma, ma_id) = (cell_val(r.get(c), led, u) for c in
+                                                           ("base_value", "target_value", "actual_value", "ma_included"))
         pre = f"{a.company} {m}"
-        bid = led.register(raw(b), u, f"{pre}（{a.plan_name} の基準年実績）", by, "公開", r["source_target"]) if b is not None else None
-        tid = led.register(raw(t), u, f"{pre}の目標（{a.plan_name}）", ty, "公開", r["source_target"]) if t is not None else None
-        aid = led.register(raw(ac), u, f"{pre}の実績（{a.plan_name} 最終年度）", ty, "公開", r["source_actual"]) if ac is not None else None
-        mid = led.register(raw(ma), u, f"{pre}の目標に含まれる M&A の上積み（{a.plan_name}）", ty, "公開", r["source_target"]) if ma is not None else None
+        kw = (m,)
+        bid = b_id or (led.register(raw(b), u, f"{pre}（{a.plan_name} の基準年実績）", by, "公開", r["source_target"], kw) if b is not None else None)
+        tid = t_id or (led.register(raw(t), u, f"{pre}の目標（{a.plan_name}）", ty, "公開", r["source_target"]) if t is not None else None)
+        aid = ac_id or (led.register(raw(ac), u, f"{pre}の実績（{a.plan_name} 最終年度）", ty, "公開", r["source_actual"], kw) if ac is not None else None)
+        mid = ma_id or (led.register(raw(ma), u, f"{pre}の目標に含まれる M&A の上積み（{a.plan_name}）", ty, "公開", r["source_target"]) if ma is not None else None)
 
         def c(v: float | None, rid: str | None, unit: str, nd: int = 1) -> str:
             if v is None:
@@ -158,6 +193,8 @@ def main() -> int:
     P("- 目標の定義（連結か、M&A 込みか、為替前提）と実績の定義が同じかは、このスクリプトでは確かめない。資料の注記で確かめる")
     for n in notes:
         P(f"- {n}")
+    for rr in led.reused:
+        P(f"- 台帳にある同じ事実を使った: {rr}")
     P("")
     text = "\n".join(out)
     print(text)

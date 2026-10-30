@@ -42,6 +42,11 @@ LEDGER_COLS = ["id", "value", "unit", "definition", "period", "source_tag", "sou
 ID_RE = re.compile(r"[TQAFSGOICKD]-\d{3,}")
 
 
+def _formula_key(src: str) -> str:
+    """計算式の比較用。空白と記号の書き方の違いを落とす。"""
+    return re.sub(r"\s+", "", src or "").replace("−", "-").replace("／", "/").replace("÷", "/").replace("×", "*")
+
+
 class Ledger:
     """facts.csv を読み、追記する行を溜める。接頭辞ごとに使われていない最小の番号から振る。"""
 
@@ -51,6 +56,7 @@ class Ledger:
         self.rows: list[dict[str, str]] = []
         self.new_rows: list[dict[str, str]] = []
         self.warnings: list[str] = []
+        self.reused: list[str] = []
         if path and path.exists():
             with path.open(encoding="utf-8") as f:
                 self.rows = list(csv.DictReader(f))
@@ -105,6 +111,18 @@ class Ledger:
                 self.warnings.append(
                     f"{r['id']}（{definition} {period}）の値 {r['value']} が今回の計算 {vtext} と違う。"
                     f"新しい行を足すので、古い行を参照している成果物を確認すること")
+        if source_tag == "推定":
+            # 同じ計算式（入力 ID と演算）の行が別のスキルから登録済みなら使い回す（同じ事実を二重に載せない）
+            key = _formula_key(source)
+            for r in self.rows + self.new_rows:
+                if (r["id"].startswith(prefix + "-") and r["source_tag"] == "推定" and r["period"] == period
+                        and r["unit"] == unit and _formula_key(r["source"]) == key and re.search(r"[A-Z]-\d{3}", key)):
+                    try:
+                        if abs(float(r["value"]) - float(vtext)) <= 0.051:
+                            self.reused.append(f"{r['id']}（{r['definition']}）")
+                            return r["id"]
+                    except ValueError:
+                        pass
         rid = self._next(prefix)
         self.new_rows.append({
             "id": rid, "value": vtext, "unit": unit, "definition": definition, "period": period,
@@ -293,9 +311,22 @@ def main() -> int:
         gt_id = L.add("G", g_total, unit, "ギャップ（合計、目標 − 成り行き）", end_year, "推定",
                       f"{target.ref()} − {st_id}", [x for x in (target.id, st_id) if x])
         req = (target.value / base_total) ** (1 / n) - 1
-        req_id = L.add("G", req * 100, "%", "目標達成に必要な年率（合計）", period, "推定",
-                       f"({target.ref()} / {base_ref_p})^(1/{n}) − 1",
-                       [x for x in [target.id] + [b.id for b in bases] if x])
+        # target-math が同じ目標・同じ期間の必要年率（T-）を登録済みなら、その ID を使う（同じ事実を二重に載せない）
+        tm = None
+        if target.id:
+            for r in L.rows + L.new_rows:
+                if (r["id"].startswith("T-") and r["period"] == period and r["unit"] == "%" and r["source_tag"] == "推定"
+                        and _formula_key(r["source"]).startswith(f"({target.id}/") and f"^(1/{n})" in r["source"]):
+                    try:
+                        if abs(float(r["value"]) - req * 100) <= 0.051:
+                            tm = r["id"]
+                            L.reused.append(f"{r['id']}（{r['definition']}）")
+                            break
+                    except ValueError:
+                        pass
+        req_id = tm or L.add("G", req * 100, "%", "目標達成に必要な年率（合計）", period, "推定",
+                             f"({target.ref()} / {base_ref_p})^(1/{n}) − 1",
+                             [x for x in [target.id] + [b.id for b in bases] if x])
     seg_targets = {v.name: v for v in (parse_val(s, L) for s in args.target_seg)}
     g_seg: dict[str, tuple[float, str]] = {}
     for nm, tv in seg_targets.items():
@@ -438,7 +469,7 @@ def main() -> int:
         out.append("- 目標が渡されていないので、ギャップは — のまま")
     if lever_rows and any(L.get(r["aid"]) and L.get(r["aid"])["source_tag"] == "仮置き" for r in lever_rows):
         out.append("- レバーへの割り当ては仮置き。追う打ち手は人が決める")
-    for w in warnings + L.warnings:
+    for w in warnings + L.warnings + [f"台帳にある同じ事実を使った: {u}" for u in L.reused]:
         out.append(f"- 注意: {w}")
     out.append("")
 

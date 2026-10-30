@@ -74,8 +74,9 @@ Record the decision in `<case>/decisions.md` as `D-xxx`. Then run workplan.
 
 ## ID rules
 
-- Q-xxx and A-xxx are labels, not ledger rows. Write them without brackets (`Q-001`, not `[Q-001]`);
-  bracketed IDs are checked against `facts/facts.csv` by number-audit.
+- Q-xxx and A-xxx are labels, not ledger rows. Write them without brackets by default (`Q-001`).
+  number-audit accepts a bracketed `[Q-001]` only because the tree table defines it (Q- is the first
+  cell of its row). A- sits in the 4th column, which is not a defining position, so never bracket A-.
 - Numbers inside a hypothesis still need ledger IDs in brackets.
 - Never reuse a Q/A number. If a question is dropped, mark it 取り下げ; do not renumber.
 

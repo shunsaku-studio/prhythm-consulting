@@ -72,7 +72,9 @@ Intake questions: [references/intake.md](references/intake.md).
    ```
    It writes the grid between `<!-- COVERAGE:BEGIN -->` and `<!-- COVERAGE:END -->` and lists:
    empty cells, gaps with no option, options with no gap or lane, malformed rows. Exit code 1 means
-   something is open.
+   something is open. The gaps to cover are the G- IDs in the first column of the 埋めるギャップ table
+   (03-gap-bridge.md also holds G- rows for required growth, pt and lever drafts, which are not gaps to cover);
+   `--gaps` checks that those IDs exist in 03-gap-bridge.md.
 5. **Handle empty cells honestly.** For each empty cell, either add a real option (with a source) or
    leave it 空欄. Only write a row in 該当なしの判断 when there is a stated reason; the reviewer, not
    you, signs it off. Never fill a cell with generic text to make the grid look complete.

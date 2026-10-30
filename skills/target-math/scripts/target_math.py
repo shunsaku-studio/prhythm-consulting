@@ -371,7 +371,10 @@ def main() -> int:
         for part in a.history.split(","):
             fy, v = part.split("=")
             fy = fy.strip()
-            vid = ledger.register("F", v.strip(), u, f"{a.metric}（実績）", fy, "公開", f"{a.history_source}（{fy}）")
+            if fy == by and _same(v.strip(), raw(base, 4).rstrip("0").rstrip(".")):
+                vid = base_id  # 基準年は基準値と同じ事実。二重に登録しない
+            else:
+                vid = ledger.register("F", v.strip(), u, f"{a.metric}（実績）", fy, "公開", f"{a.history_source}（{fy}）")
             hist.append((fy_num(fy), float(v), vid))
     hist.sort()
     own: list[tuple[str, float, str]] = []

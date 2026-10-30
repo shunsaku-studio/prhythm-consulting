@@ -61,7 +61,7 @@ python3 skills/midterm-plan-reader/scripts/plan_check.py <plan.csv> \
   --ledger <case>/facts/facts.csv --append --out /tmp/plan-check.md
 ```
 
-Input CSV columns: `metric,unit,base_year,base_value,target_year,target_value,actual_value,ma_included,source_target,source_actual,note`. Unknown values are — or empty. `%` metrics get gaps in pt. Re-running reuses IDs. Keep the CSV next to the case (e.g. `facts/midterm-plan.csv`) so it can be re-run.
+Input CSV columns: `metric,unit,base_year,base_value,target_year,target_value,actual_value,ma_included,source_target,source_actual,note`. Unknown values are — or empty. A value already in the ledger (e.g. the 有報 revenue target-math registered) is written `@F-001` or `2000@F-001`; the script then uses that ID instead of registering the same fact again. Without it, a 公開 row with the same period, unit and value whose definition contains the metric name is reused. `%` metrics get gaps in pt. Re-running reuses IDs. Keep the CSV next to the case (e.g. `facts/midterm-plan.csv`) so it can be re-run.
 
 ## Pitfalls
 

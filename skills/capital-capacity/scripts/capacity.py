@@ -9,12 +9,13 @@
                  --inputs に同じ key があれば --inputs が優先
 
 key（* は必須。financials から取れるものは financials でもよい）
+  （financials の item 名は company-financials が書く有報の科目名。IFRS の名前も読む。違う名前なら --fin-map）
   ocf_base*          営業 CF（年、基準年度）            financials: 営業活動によるキャッシュ・フロー
-  net_income_base*   当期純利益（配当の計算に使う）      financials: 親会社株主に帰属する当期純利益
-  sales_base*        売上高（最低手元資金の計算に使う）   financials: 売上高
-  cash*              現金及び預金                        financials: 現金及び預金
-  debt*              有利子負債                          financials: 有利子負債
-  equity*            自己資本（純資産で代用してよい）     financials: 純資産
+  net_income_base*   当期純利益（配当の計算に使う）      financials: 親会社株主に帰属する当期純利益 / 親会社の所有者に帰属する当期利益
+  sales_base*        売上高（最低手元資金の計算に使う）   financials: 売上高 / 売上収益
+  cash*              現金及び預金                        financials: 現金及び預金 / 現金及び現金同等物
+  debt*              有利子負債                          financials: 有利子負債（内訳しかなければ ratios.py の合計の ID を inputs に書く）
+  equity*            自己資本（純資産で代用してよい）     financials: 純資産 / 親会社の所有者に帰属する持分
   op_income_base     営業利益（全社 ROIC の基準）         financials: 営業利益
   maintenance_capex* 維持投資（年）。成長投資は 05-initiatives.csv 側に置く
   payout_ratio*      配当性向（%）
@@ -39,6 +40,10 @@ key（* は必須。financials から取れるものは financials でもよい�
 
 出力: Markdown（標準出力、--out-md）。--append-ledger で C-xxx 行を台帳に書く。
       C-xxx は定義と期間が同じ行があれば上書きする（再実行しても重複しない）。新しい行は未使用の最小番号。
+      案を比べるとき（初回案で不足 → 打ち手を見直して再計算）は --label で案の名前を付ける。
+      案によって変わる行（投資総額、過不足、ネット D/E の最大、増分 ROIC、施策を足した後の ROIC）の定義に
+      案の名前が入るので、前の案の C- 行は上書きされずに残り、decisions.md から引ける。調達余力の行は案によらず 1 つ
+  全社 ROIC = 税引後営業利益 ÷（純資産 + 有利子負債 − 現金及び預金）。CONVENTIONS の共通の定義（期末残高）
 
 使い方:
   python3 capacity.py --initiatives 05-initiatives.csv --ledger facts/facts.csv \\
@@ -61,15 +66,17 @@ TO_OKU = {"億円": 1.0, "百万円": 0.01, "兆円": 10000.0}
 PCT_KEYS = {"payout_ratio", "tax_rate", "op_margin", "wacc", "ocf_growth", "ni_growth", "wc_ratio"}
 REQUIRED = ["ocf_base", "net_income_base", "sales_base", "cash", "debt", "equity", "maintenance_capex",
             "payout_ratio", "min_cash_months", "net_de_limit", "tax_rate", "op_margin", "wacc"]
+# financials.csv の item 名（company-financials は有報の科目名のまま書く）。左から順に探す
 FIN_MAP = {
-    "ocf_base": "営業活動によるキャッシュ・フロー",
-    "net_income_base": "親会社株主に帰属する当期純利益",
-    "sales_base": "売上高",
-    "cash": "現金及び預金",
-    "debt": "有利子負債",
-    "equity": "純資産",
-    "op_income_base": "営業利益",
+    "ocf_base": ["営業活動によるキャッシュ・フロー"],
+    "net_income_base": ["親会社株主に帰属する当期純利益", "親会社の所有者に帰属する当期利益"],
+    "sales_base": ["売上高", "売上収益"],
+    "cash": ["現金及び預金", "現金及び現金同等物"],
+    "debt": ["有利子負債"],
+    "equity": ["純資産", "親会社の所有者に帰属する持分"],
+    "op_income_base": ["営業利益"],
 }
+DEBT_PARTS = ["短期借入金", "長期借入金", "社債", "コマーシャル・ペーパー", "リース債務"]
 
 
 class InputError(Exception):
@@ -169,6 +176,8 @@ def main() -> int:
     ap.add_argument("--fin-map", help='financials の item 名の対応を JSON で上書き（例 \'{"equity":"自己資本"}\'）')
     ap.add_argument("--count-initiative-cf", action="store_true",
                     help="施策の税引後営業利益を営業 CF 余力に足す（既定は足さない＝保守側）")
+    ap.add_argument("--label", default="",
+                    help="C- の定義に付ける案の名前（例: 初回案、見直し案）。案を比べるときに、前の案の行を上書きしないため")
     ap.add_argument("--out-md")
     ap.add_argument("--append-ledger", action="store_true")
     ap.add_argument("--today", default=dt.date.today().isoformat())
@@ -178,22 +187,33 @@ def main() -> int:
         led = Ledger(Path(args.ledger))
         # ---- 入力を集める（値は台帳から）
         refs: dict[str, str] = {}
+        fin_debt_parts: list[str] = []
         if args.financials:
             if not args.fy:
                 raise InputError("--financials を使うときは --fy（基準年度）を指定する")
-            fmap = dict(FIN_MAP)
+            fmap = {k: list(v) for k, v in FIN_MAP.items()}
             if args.fin_map:
-                fmap.update(json.loads(args.fin_map))
+                for k, item in json.loads(args.fin_map).items():
+                    fmap[k] = [item] if isinstance(item, str) else list(item)
+            by_item: dict[str, str] = {}
             with Path(args.financials).open(encoding="utf-8") as f:
                 for r in csv.DictReader(f):
-                    if r["fiscal_year"].strip() != args.fy or r["segment"].strip() != "連結":
-                        continue
-                    for k, item in fmap.items():
-                        if r["item"].strip() == item:
-                            rid = r["id"].strip()
-                            if rid not in led.by_id:
-                                raise InputError(f"financials.csv の {rid}（{item}）が台帳にありません")
-                            refs[k] = rid
+                    if r["fiscal_year"].strip() == args.fy and r["segment"].strip() == "連結":
+                        by_item[r["item"].strip()] = r["id"].strip()
+            if not by_item:
+                raise InputError(f"financials.csv に {args.fy} の連結の行がありません（年度は FY2025 の形で書く）")
+            for k, items in fmap.items():
+                hit = next((i for i in items if i in by_item), None)
+                if hit is None:
+                    continue
+                rid = by_item[hit]
+                if rid not in led.by_id:
+                    raise InputError(f"financials.csv の {rid}（{hit}）が台帳にありません")
+                refs[k] = rid
+            if "debt" not in refs and any(p in by_item for p in DEBT_PARTS):
+                fin_debt_parts = [p for p in DEBT_PARTS if p in by_item]
+            else:
+                fin_debt_parts = []
         with Path(args.inputs).open(encoding="utf-8") as f:
             for r in csv.DictReader(f):
                 k = (r.get("key") or "").strip()
@@ -203,7 +223,12 @@ def main() -> int:
                     refs[k] = r["ref"].strip()
         missing = [k for k in REQUIRED if k not in refs]
         if missing:
-            raise InputError("必須の入力が足りません: " + ", ".join(missing))
+            hint = ""
+            if "debt" in missing and args.financials and fin_debt_parts:
+                hint = ("。financials.csv に有利子負債の合計がなく、内訳（" + "、".join(fin_debt_parts) +
+                        "）だけがある。financial-analysis の ratios.py が台帳に載せる「有利子負債」（推定）の ID を "
+                        "06-capital-inputs.csv の debt に書く")
+            raise InputError("必須の入力が足りません: " + ", ".join(missing) + hint)
         v = {k: led.value(rid, k) for k, rid in refs.items()}
         for opt in ("ocf_growth", "ni_growth", "wc_ratio"):
             v.setdefault(opt, 0.0)
@@ -336,7 +361,11 @@ def main() -> int:
             defs.append(("after_roic", after_roic * 100, "%", "全社 ROIC（施策を足した後、成り行き事業は基準年度のまま）", f"FY{y_last}",
                          "（基準の税引後営業利益 + 施策の増分）÷（基準の投下資本 + 施策の投資累計）"))
         digits = {"倍": 2, "%": 1, "億円": 1}
+        # 案によって変わる行だけに案の名前を付ける（調達余力の側は案によらないので、同じ事実を二重に載せない）
+        plan_keys = {"inv", "gap", "maxde", "inc_roic", "after_roic"} | ({"fcf", "cap"} if args.count_initiative_cf else set())
         for key, val, unit, definition, per, src in defs:
+            if args.label and key in plan_keys:
+                definition = f"{definition}（{args.label}）"
             if args.append_ledger:
                 d = digits[unit]
                 ids[key] = led.upsert("C", {"value": "—" if val is None else f"{val:.{d}f}", "unit": unit,
@@ -344,6 +373,12 @@ def main() -> int:
                                             "source": src, "retrieved_at": args.today,
                                             "confidentiality": conf, "replace_by": ""})
         if args.append_ledger:
+            # 合計と過不足の計算式は、C- の ID で書き直す（推定の行は入力 ID でたどれるようにする）
+            formula = {"cap": ("fcf", "cash", "borrow", "asset"), "gap": ("cap", "inv")}
+            for key, parts in formula.items():
+                if key in ids and all(p in ids for p in parts):
+                    src = " + ".join(ids[p] for p in parts) if key == "cap" else f"{ids['cap']} − {ids['inv']}"
+                    led.by_id[ids[key]]["source"] = src
             led.save()
 
         def tag(key, val, d=1):

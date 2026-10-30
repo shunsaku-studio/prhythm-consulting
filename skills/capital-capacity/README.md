@@ -27,7 +27,7 @@
 1. 財務方針（配当性向、D/E の上限、WACC、政策保有株の縮減）を開示資料から台帳に登録する
 2. 出典のない前提（維持投資、最低手元資金、税率、施策の営業利益率）を仮置きで登録し、差し替え期限を付ける
 3. `06-capital-inputs.csv` に key と台帳の ID を書く
-4. `python3 skills/capital-capacity/scripts/capacity.py --initiatives 05-initiatives.csv --ledger facts/facts.csv --inputs 06-capital-inputs.csv --financials facts/financials.csv --fy FY2025 --out-md 06-capital.tables.md --append-ledger --today YYYY-MM-DD`
+4. `python3 skills/capital-capacity/scripts/capacity.py --initiatives 05-initiatives.csv --ledger facts/facts.csv --inputs 06-capital-inputs.csv --financials facts/financials.csv --fy FY2025 --out-md /tmp/06-capital.tables.md --append-ledger --today YYYY-MM-DD`
 5. `templates/capital.md` に表を貼り、`06-capital.md` にする
 6. 足りないときは、道筋を並べてレビューに出す。どれを選ぶかは人が決める
 
@@ -49,8 +49,12 @@
 
 ## 具体例
 
-<!-- EXAMPLE: お題A の実行結果で埋める -->
-北辰工業の 06-capital.md から、投資総額と調達余力の対照、年次のネット D/E、増分 ROIC と WACC の比較を抜粋する（[cases/hokushin/](../../cases/hokushin/)）。
+| 案 | 投資総額 | 過不足 | ネット D/E の最大 |
+|----|---------|-------|----------------|
+| 初回案（大型買収あり） | 1,850.0 億円 [C-001] | -657.6 億円 [C-007] | 1.21倍 [C-008] |
+| 見直し案 | 1,040.0 億円 [C-012] | 152.4 億円 [C-013] | 0.50倍 [C-014] |
+
+初回案の不足を受けて打ち手に戻った（D-010）。`--label` で案ごとの C- 行を残している。増分 ROIC は 5.8% [C-015] で WACC 6.0% [F-054] を下回る。全体は [cases/hokushin/06-capital.md](../../cases/hokushin/06-capital.md)。
 
 ## 先輩が聞くとよい問い
 

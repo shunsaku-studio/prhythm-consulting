@@ -359,3 +359,9 @@
 .vp-doc td:first-child .skill-badge {
   margin-top: 0.25rem;
 }
+
+/* 列の多い表は潰さずに横スクロールさせる */
+.vp-doc th,
+.vp-doc td {
+  min-width: 6.5em;
+}

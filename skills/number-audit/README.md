@@ -65,8 +65,7 @@
 
 ## 具体例
 
-<!-- EXAMPLE: お題A の実行結果で埋める -->
-お題A（北辰工業）の点検結果は `cases/hokushin/reviews/number-audit.md` に出る。抜粋はお題A の実行後に載せる。
+最終の点検（2026-11-13）は、台帳 629 件、点検したファイル 38 件でエラー 0 件。警告 15 件は、デッキの数字が仮置きに依って立つという警告で、対応表に理由を書いて残した。capital-capacity の合計の計算式が言葉だけで ID をたどれなかった点も、この点検で見つけて直した。レポートは [cases/hokushin/reviews/number-audit.md](../../cases/hokushin/reviews/number-audit.md)、対応は [cases/hokushin/reviews/number-audit-triage.md](../../cases/hokushin/reviews/number-audit-triage.md)。
 
 ## 先輩が聞くとよい問い
 

@@ -61,7 +61,10 @@ folder layout differs from CONVENTIONS §5.
 3. 推定 formulas reference IDs that exist in the ledger, and not themselves.
 4. Every bracketed `[ID]` in Markdown and every `id` in CSV exists in the ledger.
    Q-, A-, O-, D- IDs carry no number, so they may instead be defined in a case Markdown file
-   (heading, first table cell, or list item start — e.g. `## D-003` in `decisions.md`).
+   (heading, first table cell, or list item start — e.g. `## D-003` in `decisions.md`, `| O-007 |`
+   in `04-options.md`, `| Q-001 |` in `01-issue-tree.md`). An ID that appears only mid-row (A- in
+   the issue tree's 4th column) is not a definition, so `[A-xxx]` fails; write A- without brackets.
+   CSV `id` columns are checked against the ledger only (I-, K-, F- …), never against these definitions.
 5. The number just before `[ID]` (within 6 characters) equals the ledger value, allowing unit
    conversion (億円/百万円/兆円/万円, % ⇄ 倍) and display rounding. Fiscal years, dates and IDs
    before a tag are not treated as values.
@@ -155,6 +158,24 @@ Format of the decision (CONVENTIONS §7):
 | `reviews/number-audit-triage.md` | agent, from the template |
 | `facts/facts.csv`, other case files | agent, only mechanical fixes |
 | `decisions.md` | agent, after the human decides |
+
+## Adding a raw fact to the ledger
+
+Numbers that no other skill's script produces (a disclosed WACC, an industry market size, a
+placeholder put down for discussion) still go through a script, never a hand edit of the CSV:
+
+```bash
+python3 skills/number-audit/scripts/add_fact.py case/facts/facts.csv \
+  --value 6.0 --unit % --definition "WACC（会社開示）" --period FY2025 \
+  --tag 公開 --source "資本コスト経営の開示 p.2"
+python3 skills/number-audit/scripts/add_fact.py case/facts/facts.csv \
+  --value 30 --unit % --definition "実効税率" --period FY2025-FY2030 \
+  --tag 仮置き --replace-by 2026-11-27
+```
+
+It prints the ID to cite. It assigns the smallest unused number for the prefix (`--prefix`, default
+`F`), reuses an existing row with the same definition, period, tag and value, and refuses rows that
+break the ledger rules (公開/推定 without `--source`, 仮置き without `--replace-by`).
 
 ## Self-test
 
