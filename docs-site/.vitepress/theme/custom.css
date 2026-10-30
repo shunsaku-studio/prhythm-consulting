@@ -1,3 +1,24 @@
+/* Violet theme */
+:root {
+  --vp-c-brand-1: #6d28d9;
+  --vp-c-brand-2: #7c3aed;
+  --vp-c-brand-3: #8b5cf6;
+  --vp-c-brand-soft: rgba(139, 92, 246, 0.14);
+  --vp-c-tip-1: var(--vp-c-brand-1);
+  --vp-c-tip-2: var(--vp-c-brand-2);
+  --vp-c-tip-3: var(--vp-c-brand-3);
+  --vp-c-tip-soft: var(--vp-c-brand-soft);
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: linear-gradient(120deg, #7c3aed 20%, #c084fc);
+}
+
+.dark {
+  --vp-c-brand-1: #c4b5fd;
+  --vp-c-brand-2: #a78bfa;
+  --vp-c-brand-3: #8b5cf6;
+  --vp-c-brand-soft: rgba(167, 139, 250, 0.16);
+}
+
 /* Skill page header — title + inline install block */
 
 /* Hide VitePress auto title when custom skill header is present */
@@ -283,9 +304,9 @@
 
 /* prhythm-consulting: taxonomy badges */
 .skill-badge--verb {
-  color: #0b5fff;
-  background: color-mix(in srgb, #0b5fff 12%, transparent);
-  border-color: color-mix(in srgb, #0b5fff 28%, transparent);
+  color: #6d28d9;
+  background: color-mix(in srgb, #7c3aed 12%, transparent);
+  border-color: color-mix(in srgb, #7c3aed 28%, transparent);
 }
 
 .skill-badge--finance {
@@ -320,7 +341,7 @@
 }
 
 .dark .skill-badge--verb {
-  color: #7aa7ff;
+  color: #c4b5fd;
 }
 
 .dark .skill-badge--finance {
