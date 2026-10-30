@@ -115,7 +115,7 @@ python3 skills/gap-bridge/scripts/gap_bridge.py \
 # → 成り行き 2,553 / ギャップ 2,447 / 必要年率 20.1% / シェア 800 は年 5.9pt（赤旗）/ 0.8pt なら 99
 
 # Case run: segments, segment market growth, ledger append
-python3 skills/gap-bridge/scripts/gap_bridge.py --facts cases/hokushin/facts/facts.csv \
+python3 skills/gap-bridge/scripts/gap_bridge.py --facts case/facts/facts.csv \
   --base 自動車部品=@F-184 --base 産業機械部品=@F-186 --base 電子部品=@F-188 \
   --growth 自動車部品=@F-202 --growth 産業機械部品=@F-203 --growth 電子部品=@F-204 \
   --years 5 --base-year FY2025 --target @T-001 \

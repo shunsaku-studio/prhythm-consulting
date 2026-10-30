@@ -55,10 +55,15 @@ const SKILL_SIDEBAR_ORDER = [
   'leadership-lens',
   'issue-tree',
   'workplan',
+  'pest',
   'company-financials',
   'financial-analysis',
   'growth-decomposition',
   'competitor-benchmark',
+  'five-forces',
+  'three-c',
+  'value-chain',
+  'swot',
   'market-sizing',
   'gap-bridge',
   'option-longlist',
@@ -312,10 +317,11 @@ const listMarkdown = (dir) => {
 
 const collectWorkflows = () =>
   listMarkdown(WORKFLOWS_DIR)
-    .filter((abs) => path.basename(abs) !== 'README.md')
+    .sort((a, b) => (path.basename(a) === 'README.md' ? -1 : path.basename(b) === 'README.md' ? 1 : a.localeCompare(b)))
     .map((abs) => {
-      const slug = path.basename(abs, '.md');
-      const link = `/workflows/${slug}/`;
+      const isIndex = path.basename(abs) === 'README.md';
+      const slug = isIndex ? '' : path.basename(abs, '.md');
+      const link = isIndex ? '/workflows/' : `/workflows/${slug}/`;
       register(rel(abs), link);
       return { abs, slug, link, title: extractTitle(readText(abs)) };
     });
@@ -371,15 +377,12 @@ const generateHome = (meta, registry) => {
     const skills = sortBySidebarOrder(all.filter((s) => s.verb === verb));
     if (!skills.length) continue;
     sections.push(`### ${VERB_LABELS[verb]}`, '');
-    sections.push('| スキル | 単独度 | お題 | 概要 |');
-    sections.push('|--------|:------:|------|------|');
+    sections.push('| スキル | 単独度 | 概要 |');
+    sections.push('|--------|:------:|------|');
     for (const s of skills) {
       const auto = s.autonomy ? `<span title="${AUTONOMY_TITLES[s.autonomy]}">${AUTONOMY_LABELS[s.autonomy]}</span>` : '—';
-      const tags = [categoryBadges(s.categories), s.maturity === 'provisional' ? badge('skill-badge--provisional', '仮の型') : '']
-        .filter(Boolean)
-        .join(' ');
-      const flows = WORKFLOW_ORDER.filter((w) => s.workflows.includes(w)).join(' ') || '—';
-      sections.push(`| [${s.slug}](${s.link})<br>${tags} | ${auto} | ${flows} | ${firstSentence(s.summary)} |`);
+      const tag = s.maturity === 'provisional' ? `<br>${badge('skill-badge--provisional', '仮の型')}` : '';
+      sections.push(`| [${s.slug}](${s.link})${tag} | ${auto} | ${firstSentence(s.summary)} |`);
     }
     sections.push('');
   }
@@ -396,7 +399,7 @@ const generateHome = (meta, registry) => {
     '',
     '## スキル一覧',
     '',
-    '作業の型（動詞）ごとに並べている。お題は A 売上成長 / B 資本効率 / C 新規参入 / D M&A のうち使うもの、単独度は ◎ ひとりで完結 / ○ 結果をレビューに出す前提 / △ 上位者と一緒に決める。「仮の型」はテンプレートとよく外す点だけを置いた最小版。',
+    '作業の型（動詞）ごとに並べている。単独度は ◎ ひとりで完結 / ○ 結果をレビューに出す前提 / △ 上位者と一緒に決める。「仮の型」はテンプレートとよく外す点だけを置いた最小版。どのスキルをいつ使うかは[ワークフロー](/workflows/)にある。',
     '',
     ...sections,
   ].join('\n');
@@ -468,7 +471,7 @@ const main = () => {
 
   // 2. ページを書き出す
   for (const skill of Object.values(registry)) syncSkill(skill);
-  for (const w of workflows) syncPlainPage(w.abs, `workflows/${w.slug}`);
+  for (const w of workflows) syncPlainPage(w.abs, w.slug ? `workflows/${w.slug}` : 'workflows');
   for (const c of cases) for (const f of c.files) syncPlainPage(f.abs, f.route);
   for (const p of Object.values(pages)) {
     syncPlainPage(p.src, p.cfg.route, { title: p.title, keepTitle: p.cfg.keepTitle, description: p.cfg.description });

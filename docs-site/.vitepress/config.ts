@@ -42,7 +42,6 @@ export default withMermaid(
       search: { provider: 'local' },
       outline: { level: [2, 3], label: 'このページの内容' },
       docFooter: { prev: '前のページ', next: '次のページ' },
-      footer: { message: '会社名・人物・数値の見本はすべて架空です。' },
     },
 
     mermaid: {},

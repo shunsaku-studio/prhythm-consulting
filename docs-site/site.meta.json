@@ -6,8 +6,8 @@
   },
   "nav": [
     { "text": "考え方", "link": "/guide/ladder/" },
-    { "text": "ワークフロー", "link": "/workflows/a-revenue-growth/" },
-    { "text": "見本案件", "link": "/cases/hokushin/" },
+    { "text": "ワークフロー", "link": "/workflows/" },
+    { "text": "フレームワーク", "link": "/guide/frameworks/" },
     { "text": "逆引き", "link": "/guide/reverse-lookup/" },
     { "text": "インストール", "link": "/guide/installation/" }
   ],
@@ -19,12 +19,12 @@
         { "page": "ladder" },
         { "page": "principles" },
         { "page": "questionTime" },
+        { "page": "frameworks" },
         { "page": "reverseLookup" },
         { "page": "installation" }
       ]
     },
     { "text": "ワークフロー", "workflows": true, "collapsed": false },
-    { "text": "見本案件：北辰工業", "cases": true, "collapsed": true },
     { "groupSkillsBy": "verb" },
     {
       "text": "作る人向け",
@@ -36,6 +36,7 @@
     "ladder": { "source": "pages/ladder.md", "route": "guide/ladder", "title": "抽象から具体への「はしご」" },
     "principles": { "source": "pages/principles.md", "route": "guide/principles", "title": "設計原則" },
     "questionTime": { "source": "pages/question-time.md", "route": "guide/question-time", "title": "先輩質問タイム" },
+    "frameworks": { "source": "pages/frameworks.md", "route": "guide/frameworks", "title": "フレームワークの使い分け" },
     "reverseLookup": { "source": "pages/reverse-lookup.md", "route": "guide/reverse-lookup", "title": "依頼の言い方からの逆引き" },
     "installation": { "source": "pages/installation.md", "route": "guide/installation", "title": "インストール" },
     "conventions": { "source": "/CONVENTIONS.md", "route": "guide/conventions", "title": "共通の決まり" },

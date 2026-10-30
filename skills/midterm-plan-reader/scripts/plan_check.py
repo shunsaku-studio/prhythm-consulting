@@ -14,7 +14,7 @@
   目標・実績・基準は「公開」、計算した値は「推定」で登録する（すべて F-）
 
 使い方:
-  python3 plan_check.py plan.csv --plan-name "Hokushin Vision 2025" --company 北辰工業 \\
+  python3 plan_check.py plan.csv --plan-name "Vision 2025" --company 対象会社 \\
       --ledger case/facts/facts.csv --append --out /tmp/plan-check.md --today 2026-10-30
 
 標準ライブラリだけで動く。Python 3.10 以上。

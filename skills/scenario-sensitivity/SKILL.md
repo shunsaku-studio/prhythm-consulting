@@ -90,8 +90,8 @@ Use evidence in this order, and write it in `source`. Details in `references/met
 4. Run:
 
    ```bash
-   python3 skills/scenario-sensitivity/scripts/sensitivity.py --case cases/hokushin --target-id T-001
-   python3 skills/scenario-sensitivity/scripts/sensitivity.py --case cases/hokushin --target-id T-001 --exclude-confidence 低
+   python3 skills/scenario-sensitivity/scripts/sensitivity.py --case case --target-id T-001
+   python3 skills/scenario-sensitivity/scripts/sensitivity.py --case case --target-id T-001 --exclude-confidence 低
    ```
 
    Use the same `--exclude-confidence` as the base case. The script warns if its base FY2030
@@ -101,7 +101,7 @@ Use evidence in this order, and write it in `source`. Details in `references/met
 6. Register the scenario results:
 
    ```bash
-   python3 skills/scenario-sensitivity/scripts/sensitivity.py --case cases/hokushin --target-id T-001 --ledger-write
+   python3 skills/scenario-sensitivity/scripts/sensitivity.py --case case --target-id T-001 --ledger-write
    ```
 
    Upside and downside results become `F-` / `推定` rows (upserted by definition and period).

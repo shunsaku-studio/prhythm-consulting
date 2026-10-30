@@ -1,5 +1,0 @@
-id,initiative,option_id,method,market_ref,growth_ref,share_gain_ref,acq_revenue_ref,base_year,start_year,ramp_years,curve,investment_ref,invest_from,invest_to,invest_weights,confidence
-I-001,EV 熱マネジメント部品の拡販,O-001,market_share,F-446,F-399,F-447,,FY2025,FY2026,4,s,F-448,FY2026,FY2028,4:4:2,中
-I-002,半導体製造装置向け部品の能力増強,O-002,market_share,F-449,F-400,F-450,,FY2025,FY2026,3,s,F-451,FY2026,FY2027,5:5,中
-I-005,産業用センサーの海外展開（現地の販売会社と提携）,O-004,market_share,F-452,F-397,F-462,,FY2025,FY2027,3,s,F-463,FY2026,FY2027,5:5,中
-I-006,海外同業の中規模買収（1 件目）,O-009,acquisition,,F-396,,F-464,,FY2029,,step,F-465,FY2029,FY2029,,低

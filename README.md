@@ -7,9 +7,9 @@
 gh skill install shunsaku-studio/prhythm-consulting --all
 ```
 
-📚 **[ドキュメントサイト](https://shunsaku-studio.github.io/prhythm-consulting/)** — スキル一覧、ワークフロー、見本案件
+📚 **[ドキュメントサイト](https://shunsaku-studio.github.io/prhythm-consulting/)** — スキル一覧、ワークフロー、フレームワークの使い分け
 
-> プロトタイプ（v0.1）。お題A（売上成長）を最後まで通した段階。会社・人物・数値の見本はすべて架空。
+> プロトタイプ（v0.1）。
 
 ---
 
@@ -45,15 +45,15 @@ flowchart LR
   T["目標 T"] --> Q["論点・仮説 Q/A"] --> F["事実 F"] --> G["ギャップ S/G"] --> O["打ち手 O/I"] --> C["資本 C"] --> K["KPI とゲート K"] --> D["意思決定 D"] --> S["ストーリー"]
 ```
 
-段と段の間には人が判断するゲートがあり、主要なゲートの前に先輩質問タイムを置く。依頼の種類ごとの経路は [workflows/](workflows/) に、お題A を最後まで通した成果物は [cases/hokushin/](cases/hokushin/) にある。
+段と段の間には人が判断するゲートがあり、主要なゲートの前に先輩質問タイムを置く。依頼の種類ごとに、最後のストーリーラインと各メッセージラインを支えるスキルを [workflows/](workflows/) にまとめた。
 
 ### スキル
 
 | 作業の型 | スキル |
 |---------|--------|
-| 調べる | [company-financials](skills/company-financials/)、[midterm-plan-reader](skills/midterm-plan-reader/)、[leadership-lens](skills/leadership-lens/) |
-| 分ける | [issue-tree](skills/issue-tree/)、[workplan](skills/workplan/)、[kpi-tree](skills/kpi-tree/) |
-| 読み解く | [financial-analysis](skills/financial-analysis/)、[growth-decomposition](skills/growth-decomposition/)、[competitor-benchmark](skills/competitor-benchmark/) |
+| 調べる | [pest](skills/pest/)、[company-financials](skills/company-financials/)、[midterm-plan-reader](skills/midterm-plan-reader/)、[leadership-lens](skills/leadership-lens/) |
+| 分ける | [issue-tree](skills/issue-tree/)、[workplan](skills/workplan/)、[kpi-tree](skills/kpi-tree/)、[value-chain](skills/value-chain/) |
+| 読み解く | [financial-analysis](skills/financial-analysis/)、[growth-decomposition](skills/growth-decomposition/)、[competitor-benchmark](skills/competitor-benchmark/)、[five-forces](skills/five-forces/)、[three-c](skills/three-c/)、[swot](skills/swot/) |
 | 見積もる | [target-math](skills/target-math/)、[market-sizing](skills/market-sizing/)、[gap-bridge](skills/gap-bridge/)、[initiative-sizing](skills/initiative-sizing/)、[capital-capacity](skills/capital-capacity/)、[business-case-model](skills/business-case-model/)、[scenario-sensitivity](skills/scenario-sensitivity/) |
 | 判断材料にする | [option-longlist](skills/option-longlist/)、[option-evaluation](skills/option-evaluation/) |
 | 計画にする | [kpi-roadmap](skills/kpi-roadmap/) |
@@ -64,8 +64,7 @@ flowchart LR
 
 ```
 skills/          # スキル本体（SKILL.md は英語、README.md は日本語）
-workflows/       # お題ごとのワークフロー
-cases/hokushin/  # 見本案件（お題A、架空）
+workflows/       # お題ごとのストーリーラインと使うスキル
 docs-site/       # ドキュメントサイト（VitePress。ページは skills/ などから生成）
 CONVENTIONS.md   # 台帳、ID、出典タグ、フォルダ構成の決まり
 ```

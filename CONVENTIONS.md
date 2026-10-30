@@ -16,7 +16,7 @@
 
 ```csv
 id,value,unit,definition,period,source_tag,source,retrieved_at,confidentiality,replace_by
-F-012,200000,百万円,連結売上高（架空の北辰工業）,FY2025,公開,有価証券報告書 FY2025 p.45,2026-10-20,公開,
+F-012,200000,百万円,連結売上高,FY2025,公開,有価証券報告書 FY2025 p.45,2026-10-20,公開,
 F-031,5.0,%,対象市場の年成長率,FY2025-FY2030,仮置き,—,2026-10-22,公開,2026-11-05
 ```
 
@@ -100,6 +100,7 @@ case/
 │   ├── midterm-plan.md / midterm-plan.csv
 │   ├── leadership.md
 │   └── market-sizing.md
+├── frameworks/              # pest, five-forces, three-c, value-chain, swot の出力
 ├── client/                  # インサイドアウトの社内データ。公開データと分ける
 ├── 03-gap-bridge.md         # S・G
 ├── 04-options.md            # O（末尾に option-evaluation の評価マトリクス）
@@ -181,7 +182,7 @@ workflows:              # 使うお題
 （ゲート。スキルが決めないこと）
 ## よく外す点
 ## 具体例
-（お題A 北辰工業の出力の抜粋。cases/hokushin/ へのリンク）
+（業種とビジネスモデルだけを示した短い例。表か数行）
 ## 先輩が聞くとよい問い
 ```
 

@@ -84,7 +84,7 @@ Copy the templates into `<case>/roadmap/`.
 5. Run:
 
    ```bash
-   python3 skills/kpi-roadmap/scripts/render_roadmap.py --case cases/hokushin --assign-ids --today YYYY-MM-DD
+   python3 skills/kpi-roadmap/scripts/render_roadmap.py --case case --assign-ids --today YYYY-MM-DD
    ```
 
    It writes between `<!-- roadmap:begin -->` and `<!-- roadmap:end -->` in

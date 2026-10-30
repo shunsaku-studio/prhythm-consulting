@@ -50,6 +50,7 @@ Read these from the case folder before starting. If one is missing, note it unde
 | `facts/midterm-plan.md` | Mid-term plan priorities → lane 1 options |
 | `facts/leadership.md` | Leader's public red lines (e.g. "no overpaying for M&A"), with label 本人発言/メディア解釈/推測 |
 | `facts/market-sizing.md`, `facts/facts.csv` | Market growth by sub-market, to cite as 根拠 |
+| `frameworks/swot.md`, `frameworks/three-c.md`, `frameworks/five-forces.md` (optional) | TOWS candidates (SO/WO/ST/WT) and KSF fit/gap per segment, as seeds for options. Each seed still gets its own row and its own O-xxx here |
 
 Intake questions: [references/intake.md](references/intake.md).
 

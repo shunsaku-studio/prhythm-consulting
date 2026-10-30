@@ -44,7 +44,7 @@ not the quality of an assumption.
 
 | Input | Required | Notes |
 |-------|----------|-------|
-| Case folder (e.g. `cases/hokushin/`) | yes | Must contain `facts/facts.csv` with the 10 columns in CONVENTIONS §2 |
+| Case folder (e.g. `case/`) | yes | Must contain `facts/facts.csv` with the 10 columns in CONVENTIONS §2 |
 | Today's date | yes | Pass `--today` so placeholder deadlines are judged against the session date, not the machine clock |
 | Scope hint | no | "only deliverables" etc. The script always checks the whole folder; filter the report instead |
 
@@ -86,8 +86,8 @@ reports), `brief.md`, the ledger itself, and the `--out` file.
    audits itself):
 
    ```bash
-   python3 skills/number-audit/scripts/audit.py cases/hokushin \
-     --today 2026-11-12 --out cases/hokushin/reviews/number-audit.md
+   python3 skills/number-audit/scripts/audit.py case \
+     --today 2026-11-12 --out case/reviews/number-audit.md
    ```
 
    Exit code 1 means at least one error.

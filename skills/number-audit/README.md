@@ -26,8 +26,8 @@
 1. 案件フォルダと今日の日付を渡して、スクリプトを回す。
 
    ```bash
-   python3 skills/number-audit/scripts/audit.py cases/hokushin \
-     --today 2026-11-12 --out cases/hokushin/reviews/number-audit.md
+   python3 skills/number-audit/scripts/audit.py case \
+     --today 2026-11-12 --out case/reviews/number-audit.md
    ```
 
    レポートは `reviews/` に置く。`reviews/` は点検の対象外なので、レポート自身が点検に引っかからない。
@@ -65,7 +65,7 @@
 
 ## 具体例
 
-最終の点検（2026-11-13）は、台帳 629 件、点検したファイル 38 件でエラー 0 件。警告 15 件は、デッキの数字が仮置きに依って立つという警告で、対応表に理由を書いて残した。capital-capacity の合計の計算式が言葉だけで ID をたどれなかった点も、この点検で見つけて直した。レポートは [cases/hokushin/reviews/number-audit.md](../../cases/hokushin/reviews/number-audit.md)、対応は [cases/hokushin/reviews/number-audit-triage.md](../../cases/hokushin/reviews/number-audit-triage.md)。
+最終の点検（2026-11-13）は、台帳 629 件、点検したファイル 38 件でエラー 0 件。警告 15 件は、デッキの数字が仮置きに依って立つという警告で、対応表に理由を書いて残した。capital-capacity の合計の計算式が言葉だけで ID をたどれなかった点も、この点検で見つけて直した。
 
 ## 先輩が聞くとよい問い
 

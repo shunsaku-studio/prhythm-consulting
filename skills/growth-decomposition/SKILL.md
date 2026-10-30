@@ -90,7 +90,7 @@ or `name=@ID`. `--write` refuses market growth or acquisition inputs without IDs
 
 ```bash
 python3 skills/growth-decomposition/scripts/decompose.py \
-  --financials cases/hokushin/facts/financials.csv --facts cases/hokushin/facts/facts.csv \
+  --financials case/facts/financials.csv --facts case/facts/facts.csv \
   --from FY2016 --to FY2025 \
   --market-growth 自動車部品=@F-210 --market-growth 産業機械部品=@F-211 --market-growth 電子部品=@F-212 \
   --acquisition 産業機械部品:FY2019=@F-206 \

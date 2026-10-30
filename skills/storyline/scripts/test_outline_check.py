@@ -4,7 +4,7 @@
 使い方:
   python3 skills/storyline/scripts/test_outline_check.py
 
-フィクスチャの数字は説明用の架空の値で、案件の結論ではない。
+フィクスチャの数字は説明用の値で、案件の結論ではない。
 """
 from __future__ import annotations
 

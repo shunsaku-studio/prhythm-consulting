@@ -86,8 +86,8 @@ Every row needs a ledger ID whose value equals the row's value. Amounts in 億�
 4. Dry run (no ledger write):
 
    ```bash
-   python3 skills/business-case-model/scripts/build_model.py --case cases/hokushin
-   python3 skills/business-case-model/scripts/build_model.py --case cases/hokushin --exclude-confidence 低
+   python3 skills/business-case-model/scripts/build_model.py --case case
+   python3 skills/business-case-model/scripts/build_model.py --case case --exclude-confidence 低
    ```
 
    `model/facts-rows.csv` has a blank `id` until `--ledger-write`, so number-audit stays clean.
@@ -96,7 +96,7 @@ Every row needs a ledger ID whose value equals the row's value. Amounts in 億�
 5. Check the workbook:
 
    ```bash
-   python3 skills/business-case-model/scripts/check_xlsx.py --case cases/hokushin --soffice
+   python3 skills/business-case-model/scripts/check_xlsx.py --case case --soffice
    ```
 
    It confirms the parts of the xlsx, finds hard-coded numbers in the calc sheet, recomputes every
@@ -107,7 +107,7 @@ Every row needs a ledger ID whose value equals the row's value. Amounts in 億�
 6. Write the ledger rows once the numbers look right:
 
    ```bash
-   python3 skills/business-case-model/scripts/build_model.py --case cases/hokushin --ledger-write --today YYYY-MM-DD
+   python3 skills/business-case-model/scripts/build_model.py --case case --ledger-write --today YYYY-MM-DD
    ```
 
    It upserts headline results as `F-` rows (`推定`, source lists the input IDs), including the peak net

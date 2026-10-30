@@ -19,8 +19,8 @@
   - 年平均成長率は全社に共通する期間でそろえる。--cagr-years の期間がそろわなければ短い期間に揃えて明記する
 
 使い方の例:
-  python3 benchmark.py --competitors cases/hokushin/sources/competitors.csv \\
-      --financials case/facts/financials.csv --target 北辰工業 --extra case/facts/benchmark-extra.csv \\
+  python3 benchmark.py --competitors case/sources/competitors.csv \\
+      --financials case/facts/financials.csv --target 対象会社 --extra case/facts/benchmark-extra.csv \\
       --year FY2025 --facts case/facts/facts.csv --out case/facts/competitor-benchmark.body.md --write
 """
 from __future__ import annotations

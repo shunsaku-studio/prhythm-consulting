@@ -363,5 +363,5 @@
 /* 列の多い表は潰さずに横スクロールさせる */
 .vp-doc th,
 .vp-doc td {
-  min-width: 6.5em;
+  min-width: 4em;
 }

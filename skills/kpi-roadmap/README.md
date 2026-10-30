@@ -23,14 +23,14 @@ KPI ツリーとモデルを渡すと、FY2026〜FY2030 の年度別の KPI 目�
 
 **いつ使うか:** お題A では 9 段目（ロードマップ）。前は kpi-tree・business-case-model・scenario-sensitivity、後は storyline。
 
-1. `templates/` の `kpi-targets.csv`、`arrows.csv`、`gates.csv` を `cases/<案件>/roadmap/` に写す。`08-kpi-roadmap.md` を案件フォルダに写す。
+1. `templates/` の `kpi-targets.csv`、`arrows.csv`、`gates.csv` を `case/roadmap/` に写す。`08-kpi-roadmap.md` を案件フォルダに写す。
 2. KPI 目標を書く。売上や ROIC の年次の値はモデル（`model/model.csv`）から取り、`source` にモデルの F- の ID を書く。施策の先行指標（受注、稼働率など）は KPI ツリーから 1〜2 個選ぶ。
 3. 矢羽を書く。施策ごとにフェーズと開始・終了の年度を書く。
 4. ゲートを書く。取り返しのつかない約束（大きな投資、契約、参入）の直前に置く。指標は感応度の上位から選ぶ。
 5. スクリプトを回す。`--assign-ids` で、id の空いた KPI 目標に K- を振り、台帳に載せる。
 
    ```bash
-   python3 skills/kpi-roadmap/scripts/render_roadmap.py --case cases/hokushin --assign-ids
+   python3 skills/kpi-roadmap/scripts/render_roadmap.py --case case --assign-ids
    ```
 
 6. 画面に出た「直すこと」を直す。「人が決めること」を持って、マネージャーと閾値と撤退基準を決める。
@@ -77,7 +77,7 @@ KPI ツリーとモデルを渡すと、FY2026〜FY2030 の年度別の KPI 目�
 
 ## 具体例
 
-ゲートは G1（量産受注、2027-03-31）、G2（受注残、2027-03-31）、G3（買収倍率、2028-12-31）、G4（ROIC − WACC、2029-05-31）の 4 つ。G3 の閾値は買収額 ÷ 売上 1.2倍 [K-027] 以下で、撤退基準は「超えたら見送る（価格の規律）」。閾値は仮置きのまま、受注後に差し替える（D-017）。全体は [cases/hokushin/08-kpi-roadmap.md](../../cases/hokushin/08-kpi-roadmap.md)。
+ゲートは G1（量産受注、2027-03-31）、G2（受注残、2027-03-31）、G3（買収倍率、2028-12-31）、G4（ROIC − WACC、2029-05-31）の 4 つ。G3 の閾値は買収額 ÷ 売上 1.2倍 [K-027] 以下で、撤退基準は「超えたら見送る（価格の規律）」。閾値は仮置きのまま、受注後に差し替える（D-017）。
 
 ## 先輩が聞くとよい問い
 

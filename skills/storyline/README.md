@@ -26,7 +26,7 @@
 3. 構成を点検する。
 
    ```bash
-   python3 skills/storyline/scripts/outline_check.py cases/hokushin/deliverables/storyline.md
+   python3 skills/storyline/scripts/outline_check.py case/deliverables/storyline.md
    ```
 
 4. 数字を点検する（number-audit）。`deliverables/` のエラーを 0 件にする。
@@ -54,7 +54,7 @@
 
 統治メッセージ（レーン2 を前に出す、D-018）: 「FY2030 に 5,000 億円 [T-001] を目指すと資本の規律を破るので、期限を FY2033 に置き、買収を 2 段に分けて伸びる市場へ重心を移す道を次期中計の柱にすべきである。」
 
-レーン2 の 1 ページ目は「期限を FY2033 に置いて買収を 2 段に分ければ、ネット D/E 0.5 倍 [F-056] を守りながら 5,000 億円 [T-001] との差を 90 億円 [G-024] まで縮められる。」全体は [cases/hokushin/deliverables/storyline.md](../../cases/hokushin/deliverables/storyline.md)。
+レーン2 の 1 ページ目は「期限を FY2033 に置いて買収を 2 段に分ければ、ネット D/E 0.5 倍 [F-056] を守りながら 5,000 億円 [T-001] との差を 90 億円 [G-024] まで縮められる。」
 
 ## 先輩が聞くとよい問い
 

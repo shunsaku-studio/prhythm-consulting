@@ -23,19 +23,19 @@ business-case-model と同じ入力（`model/inputs.csv` と `05-initiatives.csv
 
 **いつ使うか:** お題A では 8 段目（KPI とモデル）。前は business-case-model、後は kpi-roadmap。
 
-1. `templates/sensitivity-ranges.csv` を `cases/<案件>/model/sensitivity-ranges.csv` に写す。変数ごとに、下振れと上振れの値と根拠を書く。値は差ではなく、入力と同じ単位の値（5% なら 5.0）で書く。
+1. `templates/sensitivity-ranges.csv` を `case/model/sensitivity-ranges.csv` に写す。変数ごとに、下振れと上振れの値と根拠を書く。値は差ではなく、入力と同じ単位の値（5% なら 5.0）で書く。
 2. 幅とシナリオに入れる変数を、レビュー役と決める（下の「人が決めること」）。
 3. スクリプトを回す。確度の除外はベースケースと同じにする。
 
    ```bash
-   python3 skills/scenario-sensitivity/scripts/sensitivity.py --case cases/hokushin --target-id T-001
+   python3 skills/scenario-sensitivity/scripts/sensitivity.py --case case --target-id T-001
    ```
 
 4. トルネードの上位 2〜3 個を読み、先に確かめる前提として書き出す。
 5. 数字に納得したら、台帳に書く。
 
    ```bash
-   python3 skills/scenario-sensitivity/scripts/sensitivity.py --case cases/hokushin --target-id T-001 --ledger-write
+   python3 skills/scenario-sensitivity/scripts/sensitivity.py --case case --target-id T-001 --ledger-write
    ```
 
 6. `templates/scenarios.md` を `model/scenarios.md` に写し、一言の結論と前提を書く。
@@ -83,7 +83,7 @@ business-case-model と同じ入力（`model/inputs.csv` と `05-initiatives.csv
 | 連結売上高（FY2030） | 3,809.2 億円 [F-468] | 3,177.8 億円 [F-485] |
 | 目標との差 | 1,190.8 億円 [F-491] 不足 | 1,822.2 億円 [F-493] 不足 |
 
-売上を最も動かすのは施策売上の実現率と I-006 の買収の実行で、これをゲートの指標にした。全体は [cases/hokushin/model/scenarios.md](../../cases/hokushin/model/scenarios.md)。
+売上を最も動かすのは施策売上の実現率と I-006 の買収の実行で、これをゲートの指標にした。
 
 ## 先輩が聞くとよい問い
 

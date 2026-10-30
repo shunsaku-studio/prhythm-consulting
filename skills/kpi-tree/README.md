@@ -24,7 +24,7 @@
 
 **いつ使うか:** お題A では 8 段目（KPI とモデル）。前は gap-bridge と initiative-sizing、後は kpi-roadmap。
 
-1. `templates/07-kpi-tree.md` を `cases/<案件>/07-kpi-tree.md` に写す。
+1. `templates/07-kpi-tree.md` を `case/07-kpi-tree.md` に写す。
 2. 上から順にノードを埋める。値は台帳（S-・G-・I-・F-）と `model/model.csv`（NOPAT マージン、投下資本回転率、ROIC の行）から取る。
 3. 新しいノードにだけ K- を振り、台帳に載せる。分からない値は — で載せる。
 4. 子を足す（掛ける）と親になるかを確かめる。合わなければ前提と未確認事項に書く。
@@ -53,8 +53,6 @@
   - 新しい打ち手 1,268.8 億円 [F-457]
   - 残るギャップ 1,190.8 億円 [F-491]
 - ROIC 7.7% [F-473] = NOPAT マージン 4.7% [K-011] × 投下資本回転率 1.63倍 [K-012]
-
-全体は [cases/hokushin/07-kpi-tree.md](../../cases/hokushin/07-kpi-tree.md)。
 
 ## 先輩が聞くとよい問い
 

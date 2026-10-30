@@ -155,9 +155,9 @@ The skill never chooses the lead lane on its own and never rewrites a decision.
 
 ```bash
 # structure: governing message first, both lanes, sentence headlines with IDs
-python3 skills/storyline/scripts/outline_check.py cases/hokushin/deliverables/storyline.md
+python3 skills/storyline/scripts/outline_check.py case/deliverables/storyline.md
 # after the lane decision
-python3 skills/storyline/scripts/outline_check.py cases/hokushin/deliverables/storyline.md --final
+python3 skills/storyline/scripts/outline_check.py case/deliverables/storyline.md --final
 # self-test
 python3 skills/storyline/scripts/test_outline_check.py
 ```

@@ -26,6 +26,18 @@
 | 「ストーリーにして」「ゴーストデッキ作って」 | [storyline](/skills/storyline/) | 伝える |
 | 「数字の裏取りして」 | [number-audit](/skills/number-audit/) | 点検する |
 
+## 定番フレームワーク
+
+| 依頼の言い方 | 呼び出すスキル |
+|-------------|---------------|
+| 「PEST やって」「外部環境の変化を洗い出して」 | [pest](/skills/pest/) |
+| 「ファイブフォースやって」「この業界、儲かる？」 | [five-forces](/skills/five-forces/) |
+| 「3C で整理して」「KSF は何？」 | [three-c](/skills/three-c/) |
+| 「バリューチェーンで見て」「どこで稼いでるか分解して」 | [value-chain](/skills/value-chain/) |
+| 「SWOT やって」「クロス SWOT 作って」 | [swot](/skills/swot/) |
+
+どれをいつ使うかは[フレームワークの使い分け](/guide/frameworks/)にある。
+
 ## このプロダクトで作らないもの
 
-PEST、ファイブフォース、SWOT、3C、バリューチェーン、事例調査、チャート選び、議事録のまとめは、汎用の LLM にそのまま頼めば足りる。スライドの作成は別の道具で行う。ストーリーの見出しと根拠の ID までを [storyline](/skills/storyline/) で用意して渡す。
+事例調査、チャート選び、議事録のまとめは、汎用の LLM にそのまま頼めば足りる。スライドの作成は別の道具で行う。ストーリーの見出しと根拠の ID までを [storyline](/skills/storyline/) で用意して渡す。

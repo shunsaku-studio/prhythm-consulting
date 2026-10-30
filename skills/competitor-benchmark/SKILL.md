@@ -8,7 +8,7 @@ description: >-
   different periods, cash-flow M&A vs deal value) and refuses to put them in the same column
   without a note. Writes facts/competitor-benchmark.md and appends F- rows to facts/facts.csv.
   Triggers: 「競合と比べて」「同業比較の表作って」「ベンチマークして」「競合の利益率並べて」
-  「大和テクノはなんで伸びてるの？」「うちの ROE って同業と比べて低い？」
+  「競合 C はなんで伸びてるの？」「うちの ROE って同業と比べて低い？」
 disable-model-invocation: false
 verb: interpret
 categories:
@@ -106,11 +106,11 @@ e.g. a peer that bought a US company), storyline.
 
 ```bash
 python3 skills/competitor-benchmark/scripts/benchmark.py \
-  --competitors cases/hokushin/sources/competitors.csv \
-  --financials cases/hokushin/facts/financials.csv --target 北辰工業 \
-  --extra cases/hokushin/facts/benchmark-extra.csv \
+  --competitors case/sources/competitors.csv \
+  --financials case/facts/financials.csv --target 対象会社 \
+  --extra case/facts/benchmark-extra.csv \
   --year FY2025 --cagr-years 5 \
-  --facts cases/hokushin/facts/facts.csv \
+  --facts case/facts/facts.csv \
   --write
 ```
 
@@ -130,4 +130,4 @@ point it outside the case folder (e.g. a scratch dir) so numbers do not appear t
 - Label CAGR by its real window (FY2021→FY2025 is 4 years, not 5).
 - Do not compute ratios in the conversation. Run the script.
 - Quote paid reports and media only as short summaries with the source.
-- No PEST/SWOT/3C. The table answers a question from the issue tree.
+- Do not fill PEST/SWOT/3C here; those live in the `pest`, `swot` and `three-c` skills. The table answers a question from the issue tree.

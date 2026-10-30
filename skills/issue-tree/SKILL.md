@@ -43,7 +43,7 @@ Read `references/pitfalls.md` before writing. Human-facing guide: `README.md`.
 ## Steps
 
 1. Write the top question as one sentence with the target spec in it
-   (e.g. "How can 北辰工業 reach consolidated revenue 5,000 億円 [T-001] by FY20xx, M&A included,
+   (e.g. "How can a B2B precision-parts maker (revenue 2,000 億円, three segments) reach consolidated revenue 5,000 億円 [T-001] by FY20xx, M&A included,
    while lifting ROE to 8%?").
 2. Split it into 3–5 first-level questions (Q-001…). Use a split that matches the ladder of the
    case: where the gap is (by segment / market), what can fill it (organic / new market / M&A),

@@ -10,8 +10,8 @@
   6. LibreOffice（soffice）があれば、キャッシュ値を消した写しを再計算させ、結果が一致するか（--soffice）
 
 使い方:
-  python3 check_xlsx.py --case cases/hokushin
-  python3 check_xlsx.py --case cases/hokushin --soffice
+  python3 check_xlsx.py --case case
+  python3 check_xlsx.py --case case --soffice
 
 終了コード: 問題が 1 件以上あれば 1、なければ 0。
 """

@@ -10,7 +10,7 @@
   4. 自社の過去の売上 CAGR との比較（financials.csv か --history から）
   5. ROE 目標との整合（目標年に要る純利益と、目標売上に対する純利益率）
 
-使い方（北辰工業の例）:
+使い方（売上 2,000 億円の精密部品メーカーの例）:
   python3 target_math.py --base 2000 --base-source "有価証券報告書 FY2025 p.40" \\
       --target 5000 --target-source "FY2025 決算説明会 書き起こし p.12" \\
       --unit 億円 --base-year FY2025 --horizons 5,7,10 --market-growth 5 \\

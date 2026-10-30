@@ -23,24 +23,24 @@
 
 **いつ使うか:** お題A では 8 段目（KPI とモデル）。前は initiative-sizing と capital-capacity、後は scenario-sensitivity と kpi-roadmap。
 
-1. `templates/inputs.csv` を `cases/<案件>/model/inputs.csv` に写す。各行に台帳の ID を入れ、値を台帳と同じにする。分からない値は先に台帳へ `仮置き`（差し替え期限つき）で載せる。
+1. `templates/inputs.csv` を `case/model/inputs.csv` に写す。各行に台帳の ID を入れ、値を台帳と同じにする。分からない値は先に台帳へ `仮置き`（差し替え期限つき）で載せる。
 2. どの確度の施策をベースケースに入れるかを、マネージャーと決める（下の「人が決めること」）。
 3. 台帳に書かずに回して、表と旗を読む。最初に「基準年の再現チェック」を見る。FY2025 の純利益と ROE が開示とずれていたら、税率か金利の入力を直す。
 
    ```bash
-   python3 skills/business-case-model/scripts/build_model.py --case cases/hokushin
+   python3 skills/business-case-model/scripts/build_model.py --case case
    ```
 
 4. xlsx を点検する。LibreOffice があれば `--soffice` で再計算まで確かめる。
 
    ```bash
-   python3 skills/business-case-model/scripts/check_xlsx.py --case cases/hokushin --soffice
+   python3 skills/business-case-model/scripts/check_xlsx.py --case case --soffice
    ```
 
 5. 数字に納得したら、台帳に書く。同じ定義と期間の行は同じ ID のまま更新される。
 
    ```bash
-   python3 skills/business-case-model/scripts/build_model.py --case cases/hokushin --ledger-write
+   python3 skills/business-case-model/scripts/build_model.py --case case --ledger-write
    ```
 
 6. `templates/model-summary.md` を `model/model-summary.md` に写し、表と旗と前提を埋める。
@@ -78,7 +78,7 @@
 
 ## 具体例
 
-ベースケースの FY2030 は、連結売上 3,809.2 億円 [F-468]、営業利益率 6.7% [F-472]、ROIC 7.7% [F-473]。ネット D/E は FY2029 に最大 0.61倍 [F-494] で上限を超え、現預金は最小 -503.8 億円 [F-495] になる。xlsx の calc シートの数式 152 件は LibreOffice の再計算と一致した。全体は [cases/hokushin/model/model-summary.md](../../cases/hokushin/model/model-summary.md)。
+ベースケースの FY2030 は、連結売上 3,809.2 億円 [F-468]、営業利益率 6.7% [F-472]、ROIC 7.7% [F-473]。ネット D/E は FY2029 に最大 0.61倍 [F-494] で上限を超え、現預金は最小 -503.8 億円 [F-495] になる。xlsx の calc シートの数式 152 件は LibreOffice の再計算と一致した。
 
 ## 先輩が聞くとよい問い
 

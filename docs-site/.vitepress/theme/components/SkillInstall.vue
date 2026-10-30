@@ -59,9 +59,7 @@ const autonomy = computed(() => frontmatter.value.autonomy as string | undefined
 const maturity = computed(() => frontmatter.value.maturity as string | undefined);
 const categories = computed(() => asList(frontmatter.value.categories));
 const workflows = computed(() => asList(frontmatter.value.workflows));
-const hasBadges = computed(
-  () => !!(verb.value || autonomy.value || maturity.value || categories.value.length),
-);
+const hasBadges = computed(() => !!(verb.value || autonomy.value || maturity.value));
 
 const command = computed(() => {
   const name = skill.value;
@@ -94,23 +92,12 @@ const copy = async () => {
 
     <div v-if="hasBadges" class="skill-badges" aria-label="分類">
       <span v-if="verb" class="skill-badge skill-badge--verb">{{ VERB_LABELS[verb] ?? verb }}</span>
-      <span
-        v-for="cat in categories"
-        :key="cat"
-        class="skill-badge skill-badge--cat"
-        :class="`skill-badge--${cat}`"
-      >{{ CATEGORY_LABELS[cat] ?? cat }}</span>
       <span v-if="autonomy" class="skill-badge skill-badge--autonomy">{{ AUTONOMY_LABELS[autonomy] ?? autonomy }}</span>
       <span
         v-if="maturity"
         class="skill-badge"
         :class="`skill-badge--${maturity}`"
       >{{ maturity === 'provisional' ? '仮の型' : '正式' }}</span>
-      <span
-        v-for="w in workflows"
-        :key="w"
-        class="skill-badge skill-badge--workflow"
-      >{{ WORKFLOW_LABELS[w] ?? w }}</span>
     </div>
 
     <div class="skill-install" aria-label="インストール">

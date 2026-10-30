@@ -12,8 +12,8 @@
   台帳への行（--ledger-write のとき。上振れ・下振れの主要な結果）
 
 使い方:
-  python3 sensitivity.py --case cases/hokushin --target-id T-001
-  python3 sensitivity.py --case cases/hokushin --target-id T-001 --ledger-write
+  python3 sensitivity.py --case case --target-id T-001
+  python3 sensitivity.py --case case --target-id T-001 --ledger-write
 
 モデルの計算は business-case-model/scripts/build_model.py の写し（下の「モデルの定義と計算」）。
 スキルを単体で動かすために写している。model.csv は読まず、inputs.csv から計算し直す

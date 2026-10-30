@@ -57,7 +57,7 @@ Ask for: the plan document(s) and pages, the final-year review (決算説明資�
 
 ```bash
 python3 skills/midterm-plan-reader/scripts/plan_check.py <plan.csv> \
-  --plan-name "Hokushin Vision 2025" --company 北辰工業 \
+  --plan-name "Vision 2025" --company 対象会社 \
   --ledger <case>/facts/facts.csv --append --out /tmp/plan-check.md
 ```
 

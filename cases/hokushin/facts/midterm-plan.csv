@@ -1,8 +1,0 @@
-metric,unit,base_year,base_value,target_year,target_value,actual_value,ma_included,source_target,source_actual,note
-連結売上高,億円,FY2022,1710,FY2025,2300,@F-001,150,中期経営計画「Hokushin Vision 2025」p.6,FY2025 決算説明資料 p.4,目標は M&A による上積み 150 億円を含む（p.6）。実績は有報の値と同じ
-営業利益率,%,FY2022,5.6,FY2025,8.0,6.1,,中期経営計画「Hokushin Vision 2025」p.6,FY2025 決算説明資料 p.4,
-ROE,%,FY2022,6.6,FY2025,8.0,7.0,,中期経営計画「Hokushin Vision 2025」p.6,FY2025 決算説明資料 p.4,目標は「8.0% 以上」。期末か期中平均かの記載なし
-海外売上比率,%,FY2022,38,FY2025,45,41,,中期経営計画「Hokushin Vision 2025」p.6,FY2025 決算説明資料 p.4,海外の定義（顧客か拠点か）の記載なし
-配当性向,%,FY2022,30,FY2025,35,—,,中期経営計画「Hokushin Vision 2025」p.6,—,振り返りの資料に実績の記載なし
-設備投資（3 年累計）,億円,—,—,FY2023-FY2025,330,315,,中期経営計画「Hokushin Vision 2025」p.8〜12,FY2025 決算説明資料 p.5,
-M&A 投資（3 年累計）,億円,—,—,FY2023-FY2025,120,0,,中期経営計画「Hokushin Vision 2025」p.8〜12,FY2025 決算説明資料 p.5,候補との条件が折り合わず実行できなかった（p.5）

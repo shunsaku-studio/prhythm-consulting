@@ -1,27 +1,29 @@
-# お題C：新規参入
+# C 新規参入
 
-> 会社と数値はすべて架空。このお題は Phase 3 で通す予定で、いまはワークフローだけを置いている。
+**依頼:** 既存事業が成熟した産業機器メーカー。工場向けのエネルギー管理サービスに出るべきか、判断材料がほしい。
 
-## 依頼
+**難所:** 市場の定義が曖昧なまま、一つの推定で規模を出しやすい。立ち上がりの遅さを見積もりに入れ忘れる。
 
-架空の産業機器メーカー「東邦電機」は、既存事業が成熟している。「工場向けのエネルギー管理サービスに出るべきか、判断材料がほしい」。
+## ストーリーライン
 
-## 難所
+| # | メッセージライン（例） | 根拠を出すスキル |
+|---|----------------------|-----------------|
+| 1 | 〜の顧客に絞り、提携で入るなら、3 年目の検証を条件に出る価値がある | [storyline](../skills/storyline/README.md) |
+| 2 | 出るか出ないかは、〜と〜の 2 点で決まる | [issue-tree](../skills/issue-tree/README.md) |
+| 3 | 脱炭素の規制とエネルギー価格が、工場の投資判断を変えつつある | [pest](../skills/pest/README.md) |
+| 4 | 市場は定義しだいで 〇〇〜〇〇 億円、狙う層だけなら 〇〇 億円 | [market-sizing](../skills/market-sizing/README.md) |
+| 5 | この業界は〜の力が強く、儲かるのは〜の位置だ | [five-forces](../skills/five-forces/README.md)、[competitor-benchmark](../skills/competitor-benchmark/README.md) |
+| 6 | 顧客が選ぶ基準は〜で、既存の顧客基盤が効く | [three-c](../skills/three-c/README.md) |
+| 7 | 自前・提携・買収を比べると、提携が早く安い | [option-longlist](../skills/option-longlist/README.md)、[option-evaluation](../skills/option-evaluation/README.md) |
+| 8 | 立ち上がりを入れると黒字化は 〇 年目で、投資は 〇〇 億円 | [initiative-sizing](../skills/initiative-sizing/README.md)、[business-case-model](../skills/business-case-model/README.md)、[capital-capacity](../skills/capital-capacity/README.md) |
+| 9 | 一番効く前提は顧客の獲得速度で、遅れると 〇 年延びる | [scenario-sensitivity](../skills/scenario-sensitivity/README.md) |
+| 10 | 〜の検証結果が出たら次に進み、出なければ撤退する | [kpi-roadmap](../skills/kpi-roadmap/README.md) |
 
-- 市場の定義が曖昧なまま、一つの推定で規模を出す
-- 立ち上がりの遅さを、見積もりに入れない
+## 人が決めるところ
 
-## ワークフロー
+1. 判断基準（何が分かれば出るか決められるか）— 前に先輩質問タイム①
+2. 狙うセグメント
+3. 参入方式（自前・提携・買収）（△）— 前に先輩質問タイム②
+4. Go/No-Go の基準と最終メッセージ — 前に先輩質問タイム③
 
-| ステップ | 答える問い | スキル | ゲート（人が決める） |
-|---------|-----------|--------|-------------------|
-| 1. 問いを立てる | 何が分かれば、出るか出ないかを決められるか | [issue-tree](../skills/issue-tree/README.md)、[workplan](../skills/workplan/README.md) | 判断基準を合意する（前に質問タイム①） |
-| 2. 市場を測る | どの定義で、どれだけの規模と成長か | [market-sizing](../skills/market-sizing/README.md)、segmentation（Phase 3） | 狙うセグメントを決める |
-| 3. 顧客と競合 | 顧客は何で選ぶか。誰がどこに立っているか | インタビューの型、customer-kbf（Phase 3）、[competitor-benchmark](../skills/competitor-benchmark/README.md) | — |
-| 4. 参入方式 | 自前、提携、買収のどれで入るか | [option-longlist](../skills/option-longlist/README.md)、[option-evaluation](../skills/option-evaluation/README.md) | 参入方式を選ぶ（△、前に質問タイム②） |
-| 5. 事業性 | いつ黒字化し、いくら投資が要るか | [initiative-sizing](../skills/initiative-sizing/README.md)、[business-case-model](../skills/business-case-model/README.md)、[scenario-sensitivity](../skills/scenario-sensitivity/README.md)、[capital-capacity](../skills/capital-capacity/README.md) | — |
-| 6. 段階ゲート | どの検証結果が出たら次に進むか | [kpi-roadmap](../skills/kpi-roadmap/README.md)、[storyline](../skills/storyline/README.md)、[number-audit](../skills/number-audit/README.md) | Go/No-Go 基準と最終メッセージを確定する（前に質問タイム③） |
-
-## お題A との違い
-
-ギャップを埋める話ではなく、「出るか出ないか」を決める話になる。そのため、論点を立てる段と、市場の定義を揃える段が重い。事業性の段では、[initiative-sizing](../skills/initiative-sizing/README.md) の立ち上がりカーブが結論を左右する。
+顧客インタビューの型と、セグメント分けのスキルは Phase 3 で作る。

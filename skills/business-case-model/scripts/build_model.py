@@ -13,8 +13,8 @@
   <case>/model/facts-rows.csv      台帳に載せる行（--ledger-write のときは台帳にも反映）
 
 使い方:
-  python3 build_model.py --case cases/hokushin
-  python3 build_model.py --case cases/hokushin --exclude-confidence 低 --label ベースケース --ledger-write
+  python3 build_model.py --case case
+  python3 build_model.py --case case --exclude-confidence 低 --label ベースケース --ledger-write
 
 計算の正本はこのファイルの compute()。scenario-sensitivity/scripts/sensitivity.py に
 同じ関数の写しがある（スキルは単体で動かすため）。直すときは両方を直す。
@@ -538,7 +538,7 @@ def build_xlsx(path: Path, inputs_rows: list[dict], drivers: dict[str, float], i
 # ---------------------------------------------------------------- main
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--case", required=True, help="案件フォルダ（例: cases/hokushin）")
+    ap.add_argument("--case", required=True, help="案件フォルダ（例: case）")
     ap.add_argument("--inputs", help="既定: <case>/model/inputs.csv")
     ap.add_argument("--initiatives", help="既定: <case>/05-initiatives.csv")
     ap.add_argument("--ledger", help="既定: <case>/facts/facts.csv")

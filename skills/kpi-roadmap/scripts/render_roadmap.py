@@ -20,8 +20,8 @@
   - decision_id が空のゲート（人がまだ決めていない）を一覧にする
 
 使い方:
-  python3 render_roadmap.py --case cases/hokushin
-  python3 render_roadmap.py --case cases/hokushin --assign-ids      # K- を振って台帳に載せる
+  python3 render_roadmap.py --case case
+  python3 render_roadmap.py --case case --assign-ids      # K- を振って台帳に載せる
 """
 from __future__ import annotations
 

@@ -41,7 +41,7 @@ Details: [references/intake.md](references/intake.md).
 
 | Input | Example | If unknown |
 |-------|---------|-----------|
-| Company name and 証券コード or EDINET コード | 北辰工業 / — | Ask. Needed to find filings |
+| Company name and 証券コード or EDINET コード | `<社名>` / — | Ask. Needed to find filings |
 | Years | FY2016–FY2025 (10 periods) | Default: 10 periods |
 | Items | PL, BS, CF basics + segment sales and profit | Default list in method.md |
 | Source available | EDINET API key? hand-made CSV? | Without a key, build the long-form CSV by hand from 有報 PDFs |
@@ -83,8 +83,8 @@ All Python 3.10+, standard library only. `--help` shows every option.
 
 ```bash
 # (a) long-form CSV (e.g. お題A)
-python3 skills/company-financials/scripts/normalize.py cases/hokushin/sources/yuho-excerpt.csv \
-  --company 北辰工業 --out <case>/facts/financials.csv \
+python3 skills/company-financials/scripts/normalize.py case/sources/yuho-excerpt.csv \
+  --company 対象会社 --out <case>/facts/financials.csv \
   --ledger <case>/facts/facts.csv --append --report <case>/facts/financials.md
 
 # (b) EDINET (needs EDINET_API_KEY in the environment)

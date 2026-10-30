@@ -20,11 +20,7 @@ gh skill install shunsaku-studio/prhythm-consulting --all
 | 知りたいこと | ページ |
 |-------------|--------|
 | 全体の考え方 | [抽象から具体への「はしご」](/guide/ladder/)、[設計原則](/guide/principles/) |
-| 依頼の種類ごとの進め方 | [お題A 売上成長](/workflows/a-revenue-growth/)、[B 資本効率](/workflows/b-capital-efficiency/)、[C 新規参入](/workflows/c-new-entry/)、[D M&A とポートフォリオ](/workflows/d-ma-portfolio/) |
-| 実際の成果物 | [見本案件：北辰工業（お題A を最後まで通したもの）](/cases/hokushin/) |
+| 最後にどんなストーリーラインになり、各メッセージにどのスキルを使うか | [ワークフロー](/workflows/) |
+| PEST、ファイブフォース、3C、バリューチェーン、SWOT の使い分け | [フレームワークの使い分け](/guide/frameworks/) |
 | 言われた依頼から、どのスキルを呼ぶか | [逆引き](/guide/reverse-lookup/) |
 | 先輩として何を聞くか | [先輩質問タイム](/guide/question-time/) |
-
-::: info 見本はすべて架空
-お題の会社、人物、数値はすべて架空で、説明用に置いたもの。実在企業の分析結果はこのサイトに載せない。
-:::

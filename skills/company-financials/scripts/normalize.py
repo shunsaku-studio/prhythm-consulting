@@ -3,7 +3,7 @@
 
 読める入力（自動判別。複数ファイルを続けて渡してよい）:
   (a) 縦持ち CSV（UTF-8）: fiscal_year,item,segment,value,unit,basis,source_page,note
-      例: cases/hokushin/sources/yuho-excerpt.csv
+      例: case/sources/yuho-excerpt.csv
   (b) EDINET API v2 の CSV（書類取得 type=5 の zip の中身。UTF-16、タブ区切り）
       列: 要素ID, 項目名, コンテキストID, 相対年度, 連結・個別, 期間・時点, ユニットID, 単位, 値
       --fiscal-year（その書類の「当期」の年度）と --doc-name（資料名）が要る
@@ -21,9 +21,9 @@
   - 子会社株式の取得による支出がある年（M&A による非連続の可能性）
 
 使い方:
-  python3 normalize.py cases/hokushin/sources/yuho-excerpt.csv \\
+  python3 normalize.py case/sources/yuho-excerpt.csv \\
       --out case/facts/financials.csv --ledger case/facts/facts.csv --append \\
-      --report case/facts/financials.md --company 北辰工業
+      --report case/facts/financials.md --company 対象会社
   python3 normalize.py edinet/XBRL_TO_CSV/jpcrp030000-asr-001_E00000-000_2026-03-31_01_2026-06-25.csv \\
       --fiscal-year FY2025 --doc-name "有価証券報告書 FY2025（EDINET S100XXXX）" --out ...
 

@@ -83,10 +83,10 @@ gap-bridge then uses those IDs.
 without `replace_by`.
 
 ```bash
-python3 skills/market-sizing/scripts/market_sizing.py --facts cases/hokushin/facts/facts.csv \
+python3 skills/market-sizing/scripts/market_sizing.py --facts case/facts/facts.csv \
   --years 5 --base-year FY2025 \
   --size 自動車向け=@F-207 --growth 自動車向け=@F-202 --scope 自動車向け=0.10:0.15:0.20 \
-  --company 自動車向け=@F-184 --bottom-up cases/hokushin/facts/market-bottom-up.csv \
+  --company 自動車向け=@F-184 --bottom-up case/facts/market-bottom-up.csv \
   --replace-by 2026-11-06 --write
 ```
 

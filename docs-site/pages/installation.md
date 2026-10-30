@@ -38,4 +38,4 @@ mkdir -p case/facts case/client case/reviews case/deliverables case/model
 echo "id,value,unit,definition,period,source_tag,source,retrieved_at,confidentiality,replace_by" > case/facts/facts.csv
 ```
 
-フォルダの構成は[共通の決まり](/guide/conventions/)、通しの見本は[北辰工業の案件](/cases/hokushin/)にある。
+フォルダの構成は[共通の決まり](/guide/conventions/)にある。
