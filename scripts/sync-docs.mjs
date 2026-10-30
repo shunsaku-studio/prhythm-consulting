@@ -364,9 +364,6 @@ const sortBySidebarOrder = (skills) => {
   );
 };
 
-const workflowMarks = (skill) =>
-  WORKFLOW_ORDER.map((w) => (skill.workflows.includes(w) ? '●' : '')).join(' | ');
-
 const generateHome = (meta, registry) => {
   const all = Object.values(registry);
   const sections = [];
@@ -374,14 +371,15 @@ const generateHome = (meta, registry) => {
     const skills = sortBySidebarOrder(all.filter((s) => s.verb === verb));
     if (!skills.length) continue;
     sections.push(`### ${VERB_LABELS[verb]}`, '');
-    sections.push('| スキル | 領域 | 単独度 | 区分 | A | B | C | D | 概要 |');
-    sections.push('|--------|------|:------:|------|:-:|:-:|:-:|:-:|------|');
+    sections.push('| スキル | 単独度 | お題 | 概要 |');
+    sections.push('|--------|:------:|------|------|');
     for (const s of skills) {
       const auto = s.autonomy ? `<span title="${AUTONOMY_TITLES[s.autonomy]}">${AUTONOMY_LABELS[s.autonomy]}</span>` : '—';
-      const mat = s.maturity === 'provisional' ? badge('skill-badge--provisional', '仮の型') : badge('skill-badge--formal', '正式');
-      sections.push(
-        `| [${s.slug}](${s.link}) | ${categoryBadges(s.categories) || '—'} | ${auto} | ${mat} | ${workflowMarks(s)} | ${firstSentence(s.summary)} |`,
-      );
+      const tags = [categoryBadges(s.categories), s.maturity === 'provisional' ? badge('skill-badge--provisional', '仮の型') : '']
+        .filter(Boolean)
+        .join(' ');
+      const flows = WORKFLOW_ORDER.filter((w) => s.workflows.includes(w)).join(' ') || '—';
+      sections.push(`| [${s.slug}](${s.link})<br>${tags} | ${auto} | ${flows} | ${firstSentence(s.summary)} |`);
     }
     sections.push('');
   }
@@ -398,7 +396,7 @@ const generateHome = (meta, registry) => {
     '',
     '## スキル一覧',
     '',
-    '作業の型（動詞）ごとに並べている。A〜D は使うお題、単独度は ◎ ひとりで完結 / ○ 結果をレビューに出す前提 / △ 上位者と一緒に決める。「仮の型」はテンプレートとよく外す点だけを置いた最小版。',
+    '作業の型（動詞）ごとに並べている。お題は A 売上成長 / B 資本効率 / C 新規参入 / D M&A のうち使うもの、単独度は ◎ ひとりで完結 / ○ 結果をレビューに出す前提 / △ 上位者と一緒に決める。「仮の型」はテンプレートとよく外す点だけを置いた最小版。',
     '',
     ...sections,
   ].join('\n');

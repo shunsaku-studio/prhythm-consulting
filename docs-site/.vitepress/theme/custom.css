@@ -334,3 +334,7 @@
 .vp-doc table {
   font-size: 0.875rem;
 }
+
+.vp-doc td:first-child .skill-badge {
+  margin-top: 0.25rem;
+}
