@@ -21,7 +21,7 @@
 
 ## 使い方
 
-**いつ使うか:** どの段の後でも使える。お題A では 10 段目（ストーリー）で storyline と組で使う。storyline が書いた `deliverables/storyline.md` は、ここでエラー 0 件になってから上に出す。
+どの段の後でも使える。お題A では 10 段目（ストーリー）で storyline と組で使う。storyline が書いた `deliverables/storyline.md` は、ここでエラー 0 件になってから上に出す。
 
 1. 案件フォルダと今日の日付を渡して、スクリプトを回す。
 

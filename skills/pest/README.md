@@ -29,12 +29,12 @@
 
 ## 使い方
 
-**いつ使うか:** [issue-tree](../issue-tree/README.md) で問いが決まった後。お題A では [market-sizing](../market-sizing/README.md) の前か並行。結果は [market-sizing](../market-sizing/README.md)、[gap-bridge](../gap-bridge/README.md)、[scenario-sensitivity](../scenario-sensitivity/README.md)、[option-longlist](../option-longlist/README.md)、[issue-tree](../issue-tree/README.md) に渡す。
+[issue-tree](../issue-tree/README.md) で問いが決まった後に使う。お題A では [market-sizing](../market-sizing/README.md) の前か並行。結果は [market-sizing](../market-sizing/README.md)、[gap-bridge](../gap-bridge/README.md)、[scenario-sensitivity](../scenario-sensitivity/README.md)、[option-longlist](../option-longlist/README.md)、[issue-tree](../issue-tree/README.md) に渡す。
 
 1. 答える論点、対象市場の定義、期間を表の上に書く。問いがなければ始めない。
-2. P・E・S・T（必要なら L・E）をチェックリストとして使い、市場を動かす変化の候補を挙げる。効く変化のない区分は「なし」と理由を書く。
+2. P・E・S・T（必要なら L・E）をチェックリストとして使い、市場を動かす変化の候補を挙げる。該当する変化のない区分は「なし」と理由を書く。
 3. 要因ごとに事実を探す。数字は台帳の ID を付ける。台帳にない数字は `skills/number-audit/scripts/add_fact.py` で足す。資料がなければ —。
-4. 経路の列に、変化が何を通じて市場に効くか（+/−/±）を書く。ここだけが解釈である。
+4. 経路の列に、変化が何を通じて市場に影響するか（+/−/±）を書く。ここだけが解釈である。
 5. 時期、確からしさ（高/中/低と理由）、影響の大きさ（自社の露出と ID）を置く。
 6. 影響 × 不確かさの表に置き、渡し先を決める。シナリオの軸は 2〜3 個まで。
 7. 止まって、持ち越す要因を人に決めてもらう。
@@ -66,7 +66,7 @@ B2B の精密部品メーカー（売上 2,000 億円、自動車・産業機械
 |---|---|---|---|---|
 | T: EV 化 | 内燃機関向け −2% [F-398]、EV 熱マネジメント向け 15% [F-399]（年平均） | ±。自動車向けの伸びは製品構成で決まる | 中。前の中計で立ち上がりが 1 年遅れた | 大。自動車が売上の 52.5% [F-292] |
 | E: 半導体の循環 | 半導体製造装置向け 9% [F-400] | ±。設備投資の上下で受注が先に動く | 低。循環する | 中〜大。産業機械が売上の 30.0% [F-286] |
-| E: 見通しの癖 | 過去 3 回 [F-402] の改定ですべて下方修正 | −。見通しは高めに出る | 高 | 大。3 事業すべての成り行きに効く |
+| E: 見通しの癖 | 過去 3 回 [F-402] の改定ですべて下方修正 | −。見通しは高めに出る | 高 | 大。3 事業すべての成り行きに影響する |
 | P: 炭素規制 | —（資料なし） | ±。EV 化を速める。工場のコストを上げる | — | — |
 
 | | 不確かさ 低 | 不確かさ 高 |

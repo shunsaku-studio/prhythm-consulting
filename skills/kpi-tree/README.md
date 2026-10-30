@@ -22,7 +22,7 @@
 
 ## 使い方
 
-**いつ使うか:** お題A では 8 段目（KPI とモデル）。前は gap-bridge と initiative-sizing、後は kpi-roadmap。
+お題A では 8 段目（KPI とモデル）で使う。前は gap-bridge と initiative-sizing、後は kpi-roadmap。
 
 1. `templates/07-kpi-tree.md` を `case/07-kpi-tree.md` に写す。
 2. 上から順にノードを埋める。値は台帳（S-・G-・I-・F-）と `model/model.csv`（NOPAT マージン、投下資本回転率、ROIC の行）から取る。

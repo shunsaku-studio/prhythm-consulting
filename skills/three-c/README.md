@@ -27,7 +27,7 @@
 
 ## 使い方
 
-**いつ使うか:** [market-sizing](../market-sizing/README.md) で市場の規模と成長が、[competitor-benchmark](../competitor-benchmark/README.md) で競合の数字がそろった後に入る。問いは [issue-tree](../issue-tree/README.md) の Q-xxx から取る。結果は [option-longlist](../option-longlist/README.md) に渡す。
+[market-sizing](../market-sizing/README.md) で市場の規模と成長が、[competitor-benchmark](../competitor-benchmark/README.md) で競合の数字がそろった後に使う。問いは [issue-tree](../issue-tree/README.md) の Q-xxx から取る。結果は [option-longlist](../option-longlist/README.md) に渡す。
 
 1. 問い、市場、セグメント（顧客の使い方で 2〜4 個）を決める。問いがなければスキルは聞き返す。
 2. 顧客: セグメントごとに規模と成長を台帳の ID で書き、購買基準を 3〜6 個置く。アウトサイドインでは基準と重みはすべて仮説で、確かめる方法を添える。
@@ -55,7 +55,7 @@
 - 「強みがある」で勝てると考え、競合と比べない
 - 競合を同業だけにし、顧客の内製や別の技術を見落とす
 
-詳しくは [references/pitfalls.md](references/pitfalls.md)。SWOT に渡すときは [swot](../swot/README.md) の強み・弱みの材料になるが、この表を正本にする。
+詳しくは [references/pitfalls.md](references/pitfalls.md)。SWOT に渡すときは [swot](../swot/README.md) の強み・弱みの材料になるが、基準にするのはこの表である。
 
 ## 具体例
 

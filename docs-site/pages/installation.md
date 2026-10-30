@@ -26,7 +26,7 @@ claude plugin install prhythm-consulting@prhythm-consulting
 
 ## 動かすのに必要なもの
 
-- 計算スクリプトは **Python 3.10 以上の標準ライブラリだけ**で動く。追加のパッケージは要らない
+- 計算スクリプトは Python 3.10 以上の標準ライブラリだけで動く。追加のパッケージは要らない
 - 実在企業の有価証券報告書を取る [company-financials](/skills/company-financials/) の EDINET 取得には、EDINET API v2 の API キー（無料で登録）が要る。環境変数 `EDINET_API_KEY` に入れる
 
 ## 案件フォルダを始める

@@ -19,7 +19,7 @@
 
 ## 使い方
 
-**いつ使うか:** gap-bridge、initiative-sizing、capital-capacity、kpi-roadmap の後。書いたら number-audit で数字を点検する。スライドは別のツールで作る。
+gap-bridge、initiative-sizing、capital-capacity、kpi-roadmap の後に使う。書いたら number-audit で数字を点検する。スライドは別のツールで作る。
 
 1. 案件フォルダを渡す。スキルは、聞き手、答える問い、決まっている意思決定（目標の解釈など）を確かめる。目標の解釈が決まっていなければ止まる。
 2. スキルがレーン1 とレーン2 の「一言で」を書き、それぞれのピラミッドとゴーストデッキを組む。数字は台帳にあるものだけを ID 付きで使う。ないものは `—` にして未確認事項に回す。
@@ -58,7 +58,7 @@
 
 ## 先輩が聞くとよい問い
 
-[references/questions.md](references/questions.md) に 5 問ある。例: 「統治メッセージを、ID を見ずに 30 秒で言ってみて。そのあと、一番効いている ID を 1 つ挙げて」。
+[references/questions.md](references/questions.md) に 5 問ある。例: 「統治メッセージを、ID を見ずに 30 秒で言ってみて。そのあと、一番強く支えている ID を 1 つ挙げて」。
 
 ## 構成
 

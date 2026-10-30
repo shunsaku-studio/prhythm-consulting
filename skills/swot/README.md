@@ -8,7 +8,7 @@
 
 SWOT は、内部の強み（S）と弱み（W）を、外部の機会（O）と脅威（T）に照らして、戦略の材料を整理する道具である。起源は説が分かれる。1965 年の Harvard の教科書『Business Policy』（Learned、Christensen、Andrews、Guth）には内部と外部を合わせる考え方があるが、SWOT という略語はない。2025 年の資料研究（Puyt ほか）は、同じ 1965 年に Stanford Research Institute の研究グループが作った SOFT が元で、よく発明者とされる Albert Humphrey はその普及役だったとする。強み・弱みと機会・脅威を掛け合わせて打ち手を出す TOWS は、Weihrich（1982）が加えた。
 
-批判も強い。Hill & Westbrook（1997）は 20 社あまりの SWOT を調べ、項目が多すぎる、言葉が一般的、優先順位がない、裏付けがない、そして後の工程で誰も使わない、と指摘した。このスキルはその 5 点を一つずつ塞ぐ。項目は象限ごとに 5 件まで、強み・弱みは競合との差で書き、順位は人が決め、すべてに ID を付け、TOWS で option-longlist につなぐ。強みには VRIO（Barney）の問いを当て、目的を持たない SWOT は作らない（Koch）。出典は [references/sources.md](references/sources.md)。
+批判も強い。Hill & Westbrook（1997）は 20 社あまりの SWOT を調べ、項目が多すぎる、言葉が一般的、優先順位がない、裏付けがない、そして後の工程で誰も使わない、と指摘した。このスキルはその 5 点に一つずつ対処する。項目は象限ごとに 5 件まで、強み・弱みは競合との差で書き、順位は人が決め、すべてに ID を付け、TOWS で option-longlist につなぐ。強みには VRIO（Barney）の問いを当て、目的を持たない SWOT は作らない（Koch）。出典は [references/sources.md](references/sources.md)。
 
 ## 利用メリット
 
@@ -27,14 +27,14 @@ SWOT は、内部の強み（S）と弱み（W）を、外部の機会（O）と
 
 ## 使い方
 
-**いつ使うか:** competitor-benchmark、financial-analysis、leadership-lens の後。あれば [pest](../pest/README.md)、[five-forces](../five-forces/README.md)、[three-c](../three-c/README.md) の出力も機会・脅威の材料にする。結果は [option-longlist](../option-longlist/README.md) の入口になる。
+competitor-benchmark、financial-analysis、leadership-lens の後に使う。あれば [pest](../pest/README.md)、[five-forces](../five-forces/README.md)、[three-c](../three-c/README.md) の出力も機会・脅威の材料にする。結果は [option-longlist](../option-longlist/README.md) の入口になる。
 
 1. 目的（T-xxx）、比べる競合（[competitor-benchmark](../competitor-benchmark/README.md) の比較対象）、時間軸を決め、`frameworks/swot.md` の先頭に書く。
 2. スキルが、外部から先に機会と脅威を書く（市場の伸び、見通しの改定など。ID 付き）。
 3. スキルが、強みと弱みを競合との差で書く。数字は [financial-analysis](../financial-analysis/README.md) と competitor-benchmark の ID で引く。強みには VRIO の問いを当てる。
 4. 証拠のない項目（[leadership-lens](../leadership-lens/README.md) にある自己評価など）は、未確認の表に確かめ方と一緒に置く。
 5. スキルが、象限ごとに 5 件までに絞り、順位の案を出す。
-6. スキルが、SO・WO・ST・WT の打ち手の種を出し、効くギャップ（G-xxx）と、既にある打ち手（O-xxx）を書く。
+6. スキルが、SO・WO・ST・WT の打ち手の種を出し、対応するギャップ（G-xxx）と、既にある打ち手（O-xxx）を書く。
 7. スキルが止まり、人に判断を求める。
 
 数字を新しく足すときは `skills/number-audit/scripts/add_fact.py` で台帳に登録する。比率は会話の中で計算しない。
@@ -53,7 +53,7 @@ SWOT は、内部の強み（S）と弱み（W）を、外部の機会（O）と
 - 競合と比べずに「財務が健全」「技術力が高い」と書く
 - 社長の自己評価をそのまま強みに置く
 - 「海外の同業を買収できる」のような会社の行動を、機会に書く
-- 項目を並べすぎて、どれが効くか分からない
+- 項目を並べすぎて、どれが重要か分からない
 - TOWS の候補に金額や順位を付けて、そこで決めてしまう
 
 詳しくは [references/pitfalls.md](references/pitfalls.md)。

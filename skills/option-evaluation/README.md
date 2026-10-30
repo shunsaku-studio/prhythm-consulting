@@ -19,7 +19,7 @@
 
 ## 使い方
 
-**いつ使うか:** initiative-sizing と capital-capacity の後、追う打ち手を選ぶゲート（その前に質問タイム②）の前。
+initiative-sizing と capital-capacity の後、追う打ち手を選ぶゲート（その前に質問タイム②）の前に使う。
 
 1. `templates/evaluation-matrix.md` を 04-options.md の末尾に「評価マトリクス」として写す
 2. 施策ごとに、軸ごとの根拠を ID 付きで書いてから、1〜5 の点数を付ける（どの軸も大きいほど良い）
@@ -39,7 +39,7 @@
 - 点数に根拠がない
 - 軸の向きがそろっていない（必要資本やリスクは大きいほど悪い）
 - 加重合計の小さな差を本当の差として扱う
-- 譲れない線に触れる施策を、黙って外す
+- 譲れない線に触れる施策を、断りなく外す
 
 詳しくは [references/pitfalls.md](references/pitfalls.md)。
 

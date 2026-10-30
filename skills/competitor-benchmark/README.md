@@ -21,7 +21,7 @@
 
 ## 使い方
 
-**いつ使うか:** company-financials で financials.csv ができた後に入る。growth-decomposition と並行して進めてよい。結果は financial-analysis、gap-bridge、option-longlist、storyline の材料になる。
+company-financials で financials.csv ができた後に入る。growth-decomposition と並行して進めてよい。結果は financial-analysis、gap-bridge、option-longlist、storyline の材料になる。
 
 1. 比べる競合（3〜5 社）と、それぞれを選んだ理由を決める。
 2. 競合の数字を、資料にある科目名と会計基準のまま縦持ちの CSV に集める。対象企業の海外売上比率など、financials.csv にない数字は追加の CSV に入れる。
@@ -42,7 +42,7 @@
 - 定義の違う数字を同じ列に並べる（IFRS の事業利益と日本基準の営業利益など）
 - FY2021→FY2025 の 4 年の伸びを「5 年 CAGR」と呼ぶ
 - 対象企業の「子会社株式の取得による支出」と、競合の「M&A 投資額」を同じものとして比べる
-- 比率を並べるだけで、競合が何で伸びたかに踏み込まない
+- 比率を並べるだけで、競合が何で伸びたかまで書かない
 
 詳しくは [references/pitfalls.md](references/pitfalls.md)。
 

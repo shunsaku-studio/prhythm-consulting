@@ -21,7 +21,7 @@ KPI ツリーとモデルを渡すと、FY2026〜FY2030 の年度別の KPI 目�
 
 ## 使い方
 
-**いつ使うか:** お題A では 9 段目（ロードマップ）。前は kpi-tree・business-case-model・scenario-sensitivity、後は storyline。
+お題A では 9 段目（ロードマップ）で使う。前は kpi-tree・business-case-model・scenario-sensitivity、後は storyline。
 
 1. `templates/` の `kpi-targets.csv`、`arrows.csv`、`gates.csv` を `case/roadmap/` に写す。`08-kpi-roadmap.md` を案件フォルダに写す。
 2. KPI 目標を書く。売上や ROIC の年次の値はモデル（`model/model.csv`）から取り、`source` にモデルの F- の ID を書く。施策の先行指標（受注、稼働率など）は KPI ツリーから 1〜2 個選ぶ。

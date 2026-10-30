@@ -21,7 +21,7 @@
 
 ## 使い方
 
-**いつ使うか:** お題A では 8 段目（KPI とモデル）。前は initiative-sizing と capital-capacity、後は scenario-sensitivity と kpi-roadmap。
+お題A では 8 段目（KPI とモデル）で使う。前は initiative-sizing と capital-capacity、後は scenario-sensitivity と kpi-roadmap。
 
 1. `templates/inputs.csv` を `case/model/inputs.csv` に写す。各行に台帳の ID を入れ、値を台帳と同じにする。分からない値は先に台帳へ `仮置き`（差し替え期限つき）で載せる。
 2. どの確度の施策をベースケースに入れるかを、マネージャーと決める（下の「人が決めること」）。

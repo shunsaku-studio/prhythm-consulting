@@ -13,10 +13,10 @@
 | 3 | 脱炭素の規制とエネルギー価格が、工場の投資判断を変えつつある | [pest](../skills/pest/README.md) |
 | 4 | 市場は定義しだいで 〇〇〜〇〇 億円、狙う層だけなら 〇〇 億円 | [market-sizing](../skills/market-sizing/README.md) |
 | 5 | この業界は〜の力が強く、儲かるのは〜の位置だ | [five-forces](../skills/five-forces/README.md)、[competitor-benchmark](../skills/competitor-benchmark/README.md) |
-| 6 | 顧客が選ぶ基準は〜で、既存の顧客基盤が効く | [three-c](../skills/three-c/README.md) |
+| 6 | 顧客が選ぶ基準は〜で、既存の顧客基盤を活かせる | [three-c](../skills/three-c/README.md) |
 | 7 | 自前・提携・買収を比べると、提携が早く安い | [option-longlist](../skills/option-longlist/README.md)、[option-evaluation](../skills/option-evaluation/README.md) |
 | 8 | 立ち上がりを入れると黒字化は 〇 年目で、投資は 〇〇 億円 | [initiative-sizing](../skills/initiative-sizing/README.md)、[business-case-model](../skills/business-case-model/README.md)、[capital-capacity](../skills/capital-capacity/README.md) |
-| 9 | 一番効く前提は顧客の獲得速度で、遅れると 〇 年延びる | [scenario-sensitivity](../skills/scenario-sensitivity/README.md) |
+| 9 | 影響が一番大きい前提は顧客の獲得速度で、遅れると 〇 年延びる | [scenario-sensitivity](../skills/scenario-sensitivity/README.md) |
 | 10 | 〜の検証結果が出たら次に進み、出なければ撤退する | [kpi-roadmap](../skills/kpi-roadmap/README.md) |
 
 ## 出てくるビジネスケース（例）

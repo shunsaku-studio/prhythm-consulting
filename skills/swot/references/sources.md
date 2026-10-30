@@ -12,7 +12,7 @@
 | 6 | Koch, A. J.「SWOT does not need to be recalled: it needs to be enhanced」（Part Two） | Business Quest、University of West Georgia、2000（ページの表示は 2001 の号） | https://www.westga.edu/~bquest/2001/swot2.htm | 反論側の意見。SWOT は戦略ごと・目的ごとに作るべきで、市場の境界、競合の構造、将来の状態、戦略目標とのつながりを明示すれば使えるとする。「目的のない SWOT は作らない」ルールの根拠 |
 | 7 | Valentin, E. K.「SWOT analysis from a resource-based view」 | Journal of Marketing Theory and Practice 9(2), 54–69、2001 | https://doi.org/10.1080/10696679.2001.11501891 （書誌: https://www.semanticscholar.org/paper/Swot-Analysis-from-a-Resource-Based-View-Valentin/eeddf116979615d0adb9e37490d148407e121c38 ） | SWOT は理論の裏付けが弱く、資源と能力の価値を問わないまま強みを並べがちだという指摘。強みに VRIO の問いを当てる理由 |
 | 8 | Barney, J. B.「Looking inside for competitive advantage」 | Academy of Management Executive 9(4), 49–61、1995 | https://www.jstor.org/stable/4165288 | VRIO（価値、希少性、模倣困難性、組織）。強みが競争優位になるかを問う四つの問い |
-| 9 | Mind Tools「The TOWS Matrix」 | Mind Tools、2024-09-12 | https://www.mindtools.com/auqstul/the-tows-matrix/ | 実務の手順（SWOT を TOWS に写し、欄ごとに候補を出し、目的に照らして選ぶ）。守りの手（WT）は守りに使い、成長の土台にしないという注意 |
+| 9 | Mind Tools「The TOWS Matrix」 | Mind Tools、2024-09-12 | https://www.mindtools.com/auqstul/the-tows-matrix/ | 実務の手順（SWOT を TOWS に写し、欄ごとに候補を出し、目的に照らして選ぶ）。守りの手（WT）は守りに使い、成長の手段にしないという注意 |
 
 ## 使わなかったもの
 

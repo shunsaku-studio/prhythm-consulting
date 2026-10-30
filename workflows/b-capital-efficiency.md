@@ -10,10 +10,10 @@
 |---|----------------------|-----------------|
 | 1 | ROE 8% は、還元だけでなく事業の入れ替えと資産の圧縮を組み合わせて届く | [storyline](../skills/storyline/README.md) |
 | 2 | ROE が低い主因は利益率で、レバレッジではない | [financial-analysis](../skills/financial-analysis/README.md)、[competitor-benchmark](../skills/competitor-benchmark/README.md) |
-| 3 | 資本コストを下回る事業と、資本が寝ている活動はここだ | [kpi-tree](../skills/kpi-tree/README.md)（ROIC ツリー）、[value-chain](../skills/value-chain/README.md) |
-| 4 | 事業・資産・資本の三面で打ち手を並べると、効き方と時間軸が違う | [option-longlist](../skills/option-longlist/README.md)、[swot](../skills/swot/README.md)、[initiative-sizing](../skills/initiative-sizing/README.md) |
+| 3 | 資本コストを下回る事業と、資本が滞留している活動はここだ | [kpi-tree](../skills/kpi-tree/README.md)（ROIC ツリー）、[value-chain](../skills/value-chain/README.md) |
+| 4 | 事業・資産・資本の三面で打ち手を並べると、効果の出方と時間軸が違う | [option-longlist](../skills/option-longlist/README.md)、[swot](../skills/swot/README.md)、[initiative-sizing](../skills/initiative-sizing/README.md) |
 | 5 | 成長投資 → 資産売却 → 還元の順に組めば、FY20XX に 8% に届く | [capital-capacity](../skills/capital-capacity/README.md)、[business-case-model](../skills/business-case-model/README.md) |
-| 6 | 一番効く前提は〜で、外れると ROE は 〇% にとどまる | [scenario-sensitivity](../skills/scenario-sensitivity/README.md) |
+| 6 | 影響が一番大きい前提は〜で、外れると ROE は 〇% にとどまる | [scenario-sensitivity](../skills/scenario-sensitivity/README.md) |
 | 7 | ROIC を事業別に毎年見て、資本コストを 2 年下回る事業は見直す | [kpi-roadmap](../skills/kpi-roadmap/README.md) |
 
 ## 出てくるビジネスケース（例）
@@ -22,7 +22,7 @@
 
 ### 何をやるか
 
-| 面 | 施策 | ROE への効き方 | 時期 |
+| 面 | 施策 | ROE への効果の出方 | 時期 |
 |----|------|---------------|------|
 | 事業 | 資本コストを下回る 2 事業の価格改定と、うち 1 事業の撤退 | 純利益 +50 億円 | FY2026〜FY2028 |
 | 事業 | 伸びる 1 事業への成長投資 200 億円 | 純利益 +20 億円 | FY2027〜 |

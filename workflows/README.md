@@ -11,10 +11,10 @@
 | 1 | 結論 | 「〜すれば、目標に〜まで届く。そのために〜を決めてほしい」 | [storyline](../skills/storyline/README.md) |
 | 2 | 目標の難しさ | 「目標は年 〇% の成長を意味し、外から見ると〜の難しさだ」 | [target-math](../skills/target-math/README.md)、[midterm-plan-reader](../skills/midterm-plan-reader/README.md) |
 | 3 | 今の延長 | 「今の延長では 〇〇 にとどまり、〇〇 足りない」 | [gap-bridge](../skills/gap-bridge/README.md)、[market-sizing](../skills/market-sizing/README.md)、[pest](../skills/pest/README.md) |
-| 4 | 勝てる場所 | 「〜の市場で、〜の強みが効く」 | [three-c](../skills/three-c/README.md)、[five-forces](../skills/five-forces/README.md)、[competitor-benchmark](../skills/competitor-benchmark/README.md)、[swot](../skills/swot/README.md) |
+| 4 | 勝てる場所 | 「〜の市場で、〜の強みを活かせる」 | [three-c](../skills/three-c/README.md)、[five-forces](../skills/five-forces/README.md)、[competitor-benchmark](../skills/competitor-benchmark/README.md)、[swot](../skills/swot/README.md) |
 | 5 | 埋め方 | 「〜と〜で 〇〇 を埋める」 | [option-longlist](../skills/option-longlist/README.md)、[initiative-sizing](../skills/initiative-sizing/README.md)、[option-evaluation](../skills/option-evaluation/README.md) |
 | 6 | お金 | 「投資 〇〇 は、資本の規律を守って手当てできる」 | [capital-capacity](../skills/capital-capacity/README.md)、[business-case-model](../skills/business-case-model/README.md) |
-| 7 | 振れ幅 | 「一番効く前提は〜で、外れると 〇〇 になる」 | [scenario-sensitivity](../skills/scenario-sensitivity/README.md) |
+| 7 | 振れ幅 | 「影響が一番大きい前提は〜で、外れると 〇〇 になる」 | [scenario-sensitivity](../skills/scenario-sensitivity/README.md) |
 | 8 | 判断の仕組み | 「〜年に〜で判断し、届かなければ〜する」 | [kpi-tree](../skills/kpi-tree/README.md)、[kpi-roadmap](../skills/kpi-roadmap/README.md) |
 | 9 | 決めてほしいこと | 「経営会議では〜を決めてほしい」 | [storyline](../skills/storyline/README.md) |
 

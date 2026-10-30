@@ -20,7 +20,7 @@
 
 ## 使い方
 
-**いつ使うか:** company-financials と growth-decomposition の後、gap-bridge の前に入る。
+company-financials と growth-decomposition の後、gap-bridge の前に使う。
 
 1. セグメントごとに市場の定義を書き、自社のセグメント売上との違いを書く。
 2. 業界団体の市場規模と成長率、自社の定義に合う割合（低:基準:高）、ボトムアップの要因を集める。分からない値は — か仮置き。

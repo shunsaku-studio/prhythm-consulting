@@ -21,7 +21,7 @@
 
 ## 使い方
 
-**いつ使うか:** option-longlist のレビューで sizing に回す打ち手が決まった後。次は capital-capacity と option-evaluation。
+option-longlist のレビューで sizing に回す打ち手が決まった後に使う。次は capital-capacity と option-evaluation。
 
 1. 回す打ち手ごとに I-xxx を振る
 2. 市場規模、市場成長率、上乗せシェア、買収先の売上、投資総額を台帳に登録する（仮置きには差し替え期限）

@@ -21,7 +21,7 @@
 
 ## 使い方
 
-**いつ使うか:** お題A の 3 段目（現状と成長の内訳）の最初に使う。出力は financial-analysis、growth-decomposition、capital-capacity、business-case-model が読む。target-math は、この出力ができたら再実行して自社実績の行を埋める。
+お題A の 3 段目（現状と成長の内訳）の最初に使う。出力は financial-analysis、growth-decomposition、capital-capacity、business-case-model が読む。target-math は、この出力ができたら再実行して自社実績の行を埋める。
 
 1. 社名、証券コード、取りたい年度を渡す。EDINET の API キーがあれば環境変数 `EDINET_API_KEY` に入れる。
 2. キーがあれば、スキルが `fetch_edinet.py` で書類を探して CSV を取る。キーがない年度や古い年度は、有報の PDF から縦持ち CSV を手で作る。

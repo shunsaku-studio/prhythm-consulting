@@ -12,7 +12,7 @@
 | 2 | 5 年で届くには年 20.1% の成長が要る。7 年なら 14.0%、10 年なら 9.6% | [target-math](../skills/target-math/README.md) |
 | 3 | 今の延長では FY2030 の売上は約 2,540 億円にとどまり、約 2,460 億円足りない | [market-sizing](../skills/market-sizing/README.md)、[gap-bridge](../skills/gap-bridge/README.md) |
 | 4 | シェアに 800 億円を載せる計画は、平均的なシェア獲得（5 年で約 98 億円）を大きく超える | [gap-bridge](../skills/gap-bridge/README.md)、[growth-decomposition](../skills/growth-decomposition/README.md) |
-| 5 | 伸びる市場は EV 熱マネジメントと半導体製造装置向けで、量産立ち上げの速さが効く | [pest](../skills/pest/README.md)、[three-c](../skills/three-c/README.md)、[competitor-benchmark](../skills/competitor-benchmark/README.md) |
+| 5 | 伸びる市場は EV 熱マネジメントと半導体製造装置向けで、量産立ち上げの速さを活かせる | [pest](../skills/pest/README.md)、[three-c](../skills/three-c/README.md)、[competitor-benchmark](../skills/competitor-benchmark/README.md) |
 | 6 | 打ち手を全部積むと、資金が足りずネット D/E が規律の上限を超える | [initiative-sizing](../skills/initiative-sizing/README.md)、[capital-capacity](../skills/capital-capacity/README.md) |
 | 7 | 中計の枠のまま進めるなら、配当方針か借入の上限を変えるかを決める必要がある | [business-case-model](../skills/business-case-model/README.md)、[scenario-sensitivity](../skills/scenario-sensitivity/README.md) |
 

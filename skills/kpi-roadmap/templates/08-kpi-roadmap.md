@@ -2,7 +2,7 @@
 
 - 期間: FY2026〜FY2030（年度は 4 月始まり）
 - 元にしたもの: `model/model.csv`（ベースケース [D-xxx]）、`07-kpi-tree.md`、`model/sensitivity.md`
-- 表は `skills/kpi-roadmap/scripts/render_roadmap.py` が `roadmap/*.csv` から書く。印の間は手で直さない
+- 表は `skills/kpi-roadmap/scripts/render_roadmap.py` が `roadmap/*.csv` から書く。目印の間は手で直さない
 
 ## 本体
 

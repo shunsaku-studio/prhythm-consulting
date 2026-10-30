@@ -13,7 +13,7 @@
 | 3 | 伸ばす事業と手放す事業はここで、手放すと 〇〇 億円が生まれる | [financial-analysis](../skills/financial-analysis/README.md)、[value-chain](../skills/value-chain/README.md) |
 | 4 | 手元資金・借入余力・売却資金を合わせて、買える上限は 〇〇 億円 | [capital-capacity](../skills/capital-capacity/README.md) |
 | 5 | 狙う業界は〜で、構造的に儲かる | [five-forces](../skills/five-forces/README.md)、[competitor-benchmark](../skills/competitor-benchmark/README.md) |
-| 6 | 統合で効くのは〜の活動で、シナジーは 〇〇 億円 | [value-chain](../skills/value-chain/README.md)、[business-case-model](../skills/business-case-model/README.md) |
+| 6 | 統合で効果が出るのは〜の活動で、シナジーは 〇〇 億円 | [value-chain](../skills/value-chain/README.md)、[business-case-model](../skills/business-case-model/README.md) |
 | 7 | 価格が 〇 倍を超えると、増分 ROIC が資本コストを下回る | [scenario-sensitivity](../skills/scenario-sensitivity/README.md) |
 
 ## 出てくるビジネスケース（例）
@@ -28,7 +28,7 @@
 | 手放す | 汎用樹脂事業（売上 400 億円、ROIC は資本コスト未満）を売却し、約 300 億円を得る |
 | 買える上限 | 手元資金 300 億円 + 借入余力 600 億円 + 売却資金 300 億円 = 1,200 億円 |
 | 買う | 電子材料の同業（売上 500 億円）を、売上の 1.6 倍（800 億円）以内で |
-| 統合で効くところ | 調達と工場の統合で営業利益 +30 億円（3 年目に満額） |
+| 統合で効果が出るところ | 調達と工場の統合で営業利益 +30 億円（3 年目に満額） |
 
 売却で 400 億円減り、買収で 500 億円増えるので、差 600 億円のうち 100 億円が埋まる。残り 500 億円は 2 件目の買収かオーガニックの上積みが要り、ここは経営会議の論点に残した。
 
@@ -45,6 +45,6 @@
 1. 買収で埋める量 — 前に先輩質問タイム①
 2. ノンコアの候補（△）
 3. 買収の基準（領域、規模、価格の規律）— 前に先輩質問タイム②
-4. 深掘りする候補と最終メッセージ — 前に先輩質問タイム③
+4. 詳しく調べる候補と最終メッセージ — 前に先輩質問タイム③
 
 候補を探す ma-screening と、企業評価（comps、DCF）の連携は Phase 2 で作る。
